@@ -1,0 +1,423 @@
+/*titolo in alto   #4ed8da*/
+body{
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+/*row1*/
+
+#titolo_png{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    height: 7em;
+    width: 30em;
+}
+  
+#titolo{
+    background-color: #fd3132;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#menu{
+      background-color:#8ecfc9;
+      font-family: 'Montserrat', sans-serif;
+      color: black;
+      font-size: 13pt;
+      cursor: pointer;
+      list-style: none;
+      margin-bottom: 0em;
+      padding-left: 2em;
+}
+
+
+  /*.dropbtn {
+    border: none;
+    background-color: #8ecfc9;
+    padding: 16px;
+    }
+    */
+    
+    /*menu a tendina "corsi"
+    /* The container <div> - needed to position the dropdown content */
+    /*.dropdown {
+      position: relative;
+      display: inline-block;
+      
+    }*/
+    
+    /* Dropdown Content (Hidden by Default) */
+    /*.dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #8ecfc9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+    */
+    /* Links inside the dropdown */
+    /*.dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;}
+  
+      .dropdown-content a:hover {background-color:#4eaba1}
+  */
+  /* Show the dropdown menu on hover */
+  /*.dropdown:hover .dropdown-content {
+    display: block;
+  }*/
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  /*.dropdown:hover .dropbtn {
+    background-color: #4eaba1;
+  }*/
+  
+ /* .dropbtn:hover{
+      background-color:  #4eaba1;
+  }*/
+  /*fine menu a tendina "corsi"
+
+  /*navbar laterale*/
+  nav aside{
+    padding-right: 0em;
+    background-color:#b7dad6;
+  }
+
+  ul{
+    list-style: none;
+  }
+
+  /*.d{
+    background-color:#b7dad6;
+    padding: 0;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+}*/
+
+a{
+    text-decoration: none;
+}
+
+
+/*#nome_utente{
+    font-weight: bold;
+    padding-left: 15px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}*/
+
+/*.button2{
+  width: 100%;
+  border: none;
+  background-color:#b7dad6;
+  padding: 16px;
+  text-align: left;
+}
+
+.button2:hover{
+  background-color:white;
+}
+
+#sidebar{
+  padding-left: 1em;
+}
+
+#menu_persona{
+  padding-right: 0;
+}*/
+/*fine navbar laterale*/
+
+/*dati*/
+/*#dati{
+  margin-left: 2em;
+  margin-top: 3em;
+}
+table{
+  font-size: 1.5em;
+}
+*/
+
+#main_home{
+  display: none;
+}
+
+/*inizio pagina sui corsi*/
+/*bottoni vari corsi*/
+/*.sport{
+  height: 30em;
+  text-decoration: none;
+}
+
+#main_corsi{
+  display: none;
+  
+}
+
+#main_iscrizioni{
+  display: none;
+}
+#main_orari{
+  display: none;
+}
+#main_tariffe{
+  display: none;
+}
+#main_eventi{
+  display: none;
+}
+#main_news{
+  display: none;
+}
+#main_staff{
+  display: none;
+}
+#main_area_personale{
+  display: none;
+}
+#main_galleria{
+  display: none;
+}
+#main_contatti{
+  display: none;
+}
+
+
+#event{
+  width: 100%;
+}*/
+
+/*inizio pagina sugli eventi*/
+/*.evento{
+  margin-top: 5px ;
+  border: solid 1px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  padding: 10px;
+  
+}
+
+#scrolldiv{
+  overflow: auto;
+  height: 500px;
+}
+
+#aggiungi{
+
+  border: none;
+  background-color:#b7dad6;
+  padding: 16px;
+  margin-left: 120px;
+  margin-top: 10px;
+  width: 100px;
+  color: black;
+}*/
+
+
+/*testo bianco per menu in area personale*/
+/*.active{
+  color:white;
+}*/
+
+/*
+css per menu a tendina verticale
+div#hormenu {
+  width: 100%;
+  float: left;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid black;
+  }
+
+div#hormenu ul
+  {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  }
+
+div#hormenu li
+  {
+  width:100px;
+  float:left;
+  margin: 0;
+  padding: 0;
+  border-right: 1px solid black;
+  color:black;
+  }
+
+  div#hormenu a
+  {
+  display: block;
+  padding: 5px;
+  color: #000;
+  text-decoration: none;
+  }
+  
+div#hormenu a:hover
+  {
+  background-color: #000033;
+  color: #FFFFFF;
+  text-decoration: none;
+  }
+
+div#hormenu li ul
+  {
+  display: none
+  }
+
+  div#hormenu li:hover ul
+  {
+  display: block;
+  position: absolute;
+  z-index:1;
+  width:150px;
+  padding: 0;
+  margin: 0 0 0 -1px;
+  border:1px solid black;
+  background: white;
+  }
+
+div#hormenu li li { border:none; width:150px; }
+div#hormenu li li a { padding:2px 2px 2px 10px; }*/
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+/* Stile per il titolo */
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+/* Stile per il menu */
+#menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Stile per i bottoni delle città (dropdown) */
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none; /* Rimuove la bordatura */
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.dropdown {
+  position: relative;
+  display: block;
+}
+
+.dropdown-content {
+  display: none; /* Nasconde il contenuto per default */
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+/* Stile per la lista delle scuole */
+.school-list {
+  list-style-type: none;
+  padding-left: 20px;
+  margin: 0;
+}
+
+/* Stile per ogni scuola come elemento di lista */
+.school {
+  margin-left: 20px;
+  margin-bottom: 10px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Rimuove la bordatura dai bottoni delle scuole */
+.school-name {
+  background-color: transparent; /* Imposta lo sfondo trasparente */
+  color: #333; /* Colore del testo */
+  border: none; /* Rimuove la bordatura */
+  cursor: pointer; /* Cambia il cursore per indicare cliccabilità */
+  font-size: 16px; /* Mantieni lo stesso stile */
+  padding: 0; /* Rimuove il padding per un layout più uniforme */
+  text-align: left; /* Allinea il testo a sinistra */
+  width: 100%; /* Fa sì che il bottone occupi l'intera larghezza */
+}
+
+/* Cambia colore al passaggio del mouse */
+.school:hover {
+  background-color: #e0e0e0; /* Cambia colore al passaggio del mouse */
+}
+
+/* Stile per i piani e le macchinette */
+.floor {
+  margin-left: 20px;
+  padding: 10px;
+  background-color: #e9e9e9;
+  border-left: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.floor h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Stile per la lista delle macchinette */
+.machine-list {
+  list-style-type: none;
+  padding-left: 20px;
+  margin: 5px 0;
+}
+
+/* Rimuove la bordatura dai bottoni delle macchinette */
+.machine-button {
+  background-color: transparent; /* Imposta lo sfondo trasparente */
+  color: #333; /* Colore del testo */
+  border: none; /* Rimuove la bordatura */
+  cursor: pointer; /* Cambia il cursore per indicare cliccabilità */
+  padding: 5px; /* Mantieni un po' di padding */
+  width: 100%; /* Occupano l'intera larghezza */
+}
+
+/* Transizione per l'espansione e la chiusura dei dropdown */
+.dropdown-content,
+.floors,
+.machine-list {
+  transition: max-height 0.3s ease-out;
+  overflow: hidden;
+}
+
+/* Quando il dropdown è attivo, mostra il contenuto */
+.dropdown.active .dropdown-content,
+.school.active .floors {
+  display: block;
+}
+
+/* Dropdown a cui si applica una transizione "slide" */
+.dropdown-content,
+.floors {
+  max-height: 0;
+}
+
+.dropdown.active .dropdown-content,
+.school.active .floors {
+  max-height: 1000px; /* Un'altezza molto alta per consentire l'espansione */
+}

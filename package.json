@@ -1,0 +1,32 @@
+{
+  "name": "asdspaziolibero4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "3": "^2.1.0",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "morgan": "^1.10.0",
+    "mqtt": "^5.10.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.3",
+    "node": "^23.1.0",
+    "nodemon": "^3.1.7",
+    "sqlite": "^5.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.8",
+    "@babel/preset-env": "^7.25.8",
+    "@types/paho-mqtt": "^1.0.10",
+    "babel-loader": "^9.2.1",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
