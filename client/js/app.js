@@ -6,20 +6,15 @@
 //import page from "//unpkg.com/page/page.mjs";
 //import Evento from "./evento.js";
 //import Subscriber from "./subscriber.js";
-import { getMachineCialdeInfo } from "./api.js";
+import { getMachineCialdeInfo,getMachineCassaInfo,getMachineGuastiInfo } from "./api.js";
 import { loadCitiesAndSchools } from "./templates/citta-istituti-piani-macchinette.js";
-
-
+import {createCialdeTable,renderMachineDetails} from "./templates/tabelle_templete.js"
 
 class App{
     constructor(appContainer,menu){
         this.appContainer=appContainer;
 
-        console.log("siamo nel main")
-
         menu.innerHTML='';
-
-        
 
         //appContainer.innerHTML='';
         this.init(menu);
@@ -119,7 +114,6 @@ class App{
         });
 
         // Gestione del click sugli elementi delle scuole
-        // Gestione del click sugli elementi delle scuole
         const schoolHeaders = document.querySelectorAll('.school .school-name');
         schoolHeaders.forEach((school, index) => {
             console.log(`Scuola ${index}:`, school);
@@ -138,23 +132,66 @@ class App{
 
         const machineButtons = document.querySelectorAll('.machine-button');
         machineButtons.forEach((button) => {
-        button.addEventListener('click', async function() {
-        const buttonId = this.id; // L'ID del bottone sarà "machine-id"
-        const machineId = parseInt(buttonId.split('-')[1], 10);
+            button.addEventListener('click', async (event) => {
+                const buttonId = button.id; // Usa `button` al posto di `this`
+                const machineId = parseInt(buttonId.split('-')[1], 10);
+                console.log('Macchinetta cliccata:', machineId);
         
-        console.log('Macchinetta cliccata:', machineId); // Verifica che l'ID sia corretto
-        try {
-            // Richiama la funzione per ottenere le informazioni sulle cialde
-            console.log('Informazioni cialde richieste per :', machineId);
-            const machineInfo = await getMachineCialdeInfo(machineId);
-            //console.log('Informazioni cialde ricevute:', machineInfo);
-            // Qui puoi gestire l'output come preferisci, ad esempio aggiornando l'interfaccia utente
-        } catch (error) {
-            console.error('Errore nel recupero delle informazioni sulle cialde:', error);
-        }
+                /*try {
+                    await this.updateView(machineId); // Ora `this` si riferisce correttamente all'istanza di `App`
+                } catch (error) {
+                    console.error('Errore nel recupero delle informazioni:', error);
+                }*/
 
-    });
-});
+                try {
+                // Richiama la funzione per ottenere le informazioni sulle cialde
+                console.log('Informazioni cialde richieste per :', machineId);
+                
+                const cialdeInfo = await getMachineCialdeInfo(machineId);
+                const guastiInfo =await getMachineGuastiInfo(machineId);
+                //const cassaInfo=await getMachineCassaInfo(machineId);
+                await this.updateView(machineId,cialdeInfo);
+                //console.log('Informazioni cialde ricevute:', machineInfo);
+                // Qui puoi gestire l'output come preferisci, ad esempio aggiornando l'interfaccia utente
+            } catch (error) {
+                console.error('Errore nel recupero delle informazioni sulle cialde:', error);
+            }
+
+            });
+        });
+    }
+
+    updateView=async(machineId,cialdeInfo,guastiInfo)=>{
+        // Svuota il contenitore principale
+        this.appContainer.innerHTML = `
+            <div id="machineDetailsContainer"></div>
+            <div id="cialdeTableContainer"></div>
+            <div id="guastiTableContainer"></div>
+    `   ;
+
+        // Renderizza i dettagli della macchinetta
+        await renderMachineDetails(machineId);
+
+        // Genera una tabella vuota per le cialde
+        const cialdeTableHTML = await createCialdeTable(cialdeInfo);
+
+        // Inserisci la tabella vuota nel contenitore
+        const cialdeTableContainer = document.getElementById('cialdeTableContainer');
+        if (cialdeTableContainer) {
+            cialdeTableContainer.innerHTML = cialdeTableHTML;
+        } else {
+            console.error("Contenitore per la tabella delle cialde non trovato.");
+        }
+        // Genera una tabella vuota per i guasti
+        const guastiTableHTML = await createGuastiTable(guastiInfo);
+
+        // Inserisci la tabella vuota nel contenitore
+        const guastiTableContainer = document.getElementById('guastiTableContainer');
+        if (guastiTableContainer) {
+            guastiContainer.innerHTML = guastiTableHTML;
+        } else {
+            console.error("Contenitore per la tabella dei guasti non trovato.");
+        }
     }
     
    /* getAllCitiesFun=async()=>{

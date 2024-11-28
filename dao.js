@@ -5,6 +5,7 @@
 
 const mysql = require('mysql2');
 const mqtt=require('mqtt');
+const { resolve } = require('path');
 
 // Crea la connessione a MySQL
 const db = mysql.createConnection({
@@ -34,20 +35,13 @@ exports.requestMachineInfoCialde = function(machineId) {
         const mqttClient = getClient();
         console.log("Inizializzazione richiesta MQTT");
 
-        const responseTopic = `/info/risposta/${machineId}`;
+        const responseTopicCialda = `/info/risposta/cialde/${machineId}`;
         
         
         mqttClient.on('connect', () => {
             console.log('Connesso al broker MQTT');
             
-            mqttClient.subscribe(responseTopic, (err) => {
-                if (err) {
-                    console.error('Errore nella sottoscrizione:', err);
-                    reject(err);
-                    return;
-                }
-                
-                const message = JSON.stringify({ id: machineId, richiesta: 'cialde' });
+            const message = JSON.stringify({ id: machineId, richiesta: 'cialde' });
                 mqttClient.publish('/info', message, (error) => {
                     if (error) {
                         console.error('Errore nella pubblicazione:', error);
@@ -56,6 +50,66 @@ exports.requestMachineInfoCialde = function(machineId) {
                     }
                     console.log('Messaggio pubblicato:', message);
                 });
+            
+            mqttClient.subscribe(responseTopicCialda, (err) => {
+                if (err) {
+                    console.error('Errore nella sottoscrizione:', err);
+                    reject(err);
+                    return;
+                }
+            });
+
+            
+        });
+
+        mqttClient.on('message', (topic, message) => {
+            console.log('Messaggio ricevuto sul topic:', topic);
+            console.log('Contenuto del messaggio:', message.toString());
+            
+            try {
+                const cialdeInfo = JSON.parse(message.toString());
+                console.log('Informazioni cialde ricevute:', cialdeInfo);
+                resolve(cialdeInfo);
+            } catch (err) {
+                console.error('Errore nel parsing del messaggio:', err);
+                reject(err);
+            }
+        });
+
+        setTimeout(() => {
+            reject(new Error('Timeout - Nessuna risposta ricevuta'));
+        }, 1000000);
+    });
+};
+
+
+exports.requestMachineInfoGuasti = function(machineId) {    
+    return new Promise((resolve, reject) => {
+        const mqttClient = getClient();
+        console.log("Inizializzazione richiesta MQTT");
+
+        const responseTopicGuasti = `/info/risposta/guasti/${machineId}`;
+        
+        
+        mqttClient.on('connect', () => {
+            console.log('Connesso al broker MQTT');
+            
+            const message = JSON.stringify({ id: machineId, richiesta: 'cialde' });
+                mqttClient.publish('/info', message, (error) => {
+                    if (error) {
+                        console.error('Errore nella pubblicazione:', error);
+                        reject(error);
+                        return;
+                    }
+                    console.log('Messaggio pubblicato:', message);
+                });
+
+            mqttClient.subscribe(responseTopicGuasti, (err) => {
+                if (err) {
+                    console.error('Errore nella sottoscrizione:', err);
+                    reject(err);
+                    return;
+                }
             });
         });
 
@@ -75,9 +129,62 @@ exports.requestMachineInfoCialde = function(machineId) {
 
         setTimeout(() => {
             reject(new Error('Timeout - Nessuna risposta ricevuta'));
-        }, 10000);
+        }, 1000000);
     });
 };
+
+
+exports.requestMachineInfoCassa = function(machineId) {    
+    return new Promise((resolve, reject) => {
+        const mqttClient = getClient();
+        console.log("Inizializzazione richiesta MQTT");
+
+        const responseTopicCassa = `/info/risposta/cassa/${machineId}`;
+        
+        
+        mqttClient.on('connect', () => {
+            console.log('Connesso al broker MQTT');
+            
+            const message = JSON.stringify({ id: machineId, richiesta: 'cialde' });
+                mqttClient.publish('/info', message, (error) => {
+                    if (error) {
+                        console.error('Errore nella pubblicazione:', error);
+                        reject(error);
+                        return;
+                    }
+                    console.log('Messaggio pubblicato:', message);
+                });
+            
+            mqttClient.subscribe(responseTopicCassa, (err) => {
+                if (err) {
+                    console.error('Errore nella sottoscrizione:', err);
+                    reject(err);
+                    return;
+                }
+            });
+        });
+
+        mqttClient.on('message', (topic, message) => {
+            console.log('Messaggio ricevuto sul topic:', topic);
+            console.log('Contenuto del messaggio:', message.toString());
+            
+            try {
+                const cialdeInfo = JSON.parse(message.toString());
+                console.log('Informazioni cialde ricevute:', cialdeInfo);
+                resolve(cialdeInfo);
+            } catch (err) {
+                console.error('Errore nel parsing del messaggio:', err);
+                reject(err);
+            }
+        });
+
+        setTimeout(() => {
+            reject(new Error('Timeout - Nessuna risposta ricevuta'));
+        }, 1000000);
+    });
+};
+
+
 
 exports.getAllSubscribers= function(){
     return new Promise((resolve, reject) => {
@@ -185,6 +292,49 @@ exports.getMachineIdsBySchoolIdAndFloor = function(schoolId, floor) {
             const machineIds = rows.map(row => row.id);
 
             resolve(machineIds);
+        });
+    });
+};
+
+//restituisce dettagli macchinetta dato id
+exports.getMachineDetailsById = function(machineId) {
+    console.log("Recupero dettagli macchinetta...");
+    return new Promise((resolve, reject) => {
+        // Query SQL per unire le tabelle macchinette e scuole
+        const sql = `
+            SELECT 
+                macchinette.id AS machineId,
+                macchinette.piano AS floor,
+                scuole.nome AS schoolName,
+                scuole.citta AS city
+            FROM 
+                macchinette
+            JOIN 
+                scuole ON macchinette.id_scuola = scuole.id
+            WHERE 
+                macchinette.id = ?`;
+
+        // Esegui la query con il parametro machineId
+        db.query(sql, [machineId], (err, rows) => {
+            if (err) {
+                reject(err);
+                console.log("Errore durante il recupero dei dettagli della macchinetta:", err);
+                return;
+            }
+
+            if (rows.length === 0) {
+                reject(new Error(`Macchinetta con ID ${machineId} non trovata.`));
+                return;
+            }
+
+            // Estrarre il primo risultato (le macchinette hanno ID univoco)
+            const details = {
+                machineId: rows[0].machineId,
+                floor: rows[0].floor,
+                schoolName: rows[0].schoolName,
+                city: rows[0].city
+            };
+            resolve(details);
         });
     });
 };

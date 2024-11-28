@@ -74,5 +74,41 @@ app.get('/api/macchinette/cialde/:machineId', (req, res) => {
         .catch(error => res.status(500).json({ error: error.message }));
 });
 
+app.get('/api/macchinette/guasti/:machineId', (req, res) => {
+    
+    const machineId = req.params.machineId;
+    console.log("id:"+machineId)
+    console.log('Informazioni guasti richieste (server):', machineId);
+    dao.requestMachineInfoGuasti(machineId)
+        .then(machineInfo =>res.json(machineInfo))
+        .catch(error => res.status(500).json({ error: error.message }));
+});
+
+app.get('/api/macchinette/cassa/:machineId', (req, res) => {
+    
+    const machineId = req.params.machineId;
+    console.log("id:"+machineId)
+    console.log('Informazioni cassa richieste (server):', machineId);
+    dao.requestMachineInfoCassa(machineId)
+        .then(machineInfo =>res.json(machineInfo))
+        .catch(error => res.status(500).json({ error: error.message }));
+});
+
+app.get('/api/macchinetta/dettagli/:machineId', (req, res) => {
+    console.log("serverrrrrrrrr")
+    const machineId = req.params.machineId;
+    console.log(`Richiesta dettagli per la macchinetta con ID: ${machineId}`);
+
+    // Chiamata alla funzione getMachineDetailsById per recuperare i dettagli della macchina
+    dao.getMachineDetailsById(machineId)
+        .then(machineDetails => {
+            // Se la macchina è trovata, restituisci i dettagli in formato JSON
+            res.json(machineDetails);
+        })
+        .catch(error => {
+            // Se c'è un errore, restituisci un errore con stato 500
+            res.status(500).json({ error: 'Errore nel recupero dei dettagli della macchinetta', details: error });
+        });
+});
 
 app.listen(port, () => console.log(`server listening at http://localhost:${port}`));

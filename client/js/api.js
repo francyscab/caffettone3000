@@ -142,5 +142,73 @@ async function getMachineCialdeInfo(machineId) {
     }
 }
 
+
+async function getMachineGuastiInfo(machineId) {
+    console.log('Requesting guasti info for machine:', machineId);
+    
+    try {
+        let response = await fetch(`/api/macchinette/guasti/${machineId}`);
+        console.log(machineId)
+        
+        console.log('Response status:', response.status);
+        
+        const text = await response.text();
+        //console.log('Raw response:', text);
+        
+        if (!response.ok) {
+            console.log("errore api ")
+        }
+        
+        const machineInfoJson = JSON.parse(text);
+        console.log('Parsed machine info:', machineInfoJson);
+        return machineInfoJson;
+    } catch (error) {
+        console.error('Error in getMachineGuastiInfo:', error);
+        throw error;
+    }
+}
+
+async function getMachineCassaInfo(machineId) {
+    console.log('Requesting cassa info for machine:', machineId);
+    
+    try {
+        let response = await fetch(`/api/macchinette/cassa/${machineId}`);
+        console.log(machineId)
+        
+        console.log('Response status:', response.status);
+        
+        const text = await response.text();
+        //console.log('Raw response:', text);
+        
+        if (!response.ok) {
+            console.log("errore api ")
+        }
+        
+        const machineInfoJson = JSON.parse(text);
+        console.log('Parsed machine info:', machineInfoJson);
+        return machineInfoJson;
+    } catch (error) {
+        console.error('Error in getMachineCassaInfo:', error);
+        throw error;
+    }
+}
+
+
+async function getMachineDetails(machineId) {
+    console.log("getmachinedetalis")
+    // Esegui la richiesta all'endpoint API
+    const response = await fetch(`/api/macchinetta/dettagli/${machineId}`);
+    
+    // Converti la risposta in JSON
+    const machineDetails = await response.json();
+
+    // Controlla se la risposta è andata a buon fine
+    if (response.ok) {
+        return machineDetails;
+    } else {
+        throw new Error(machineDetails.message || "Errore durante il recupero dei dettagli della macchinetta.");
+    }
+}
+
 //export {getEvents,addEvent,getByCourse,getSubscribers,getSubByID};
-export{getAllCities,getSchoolsByCity,getMaxFloorBySchoolId,getMachineIdsBySchoolIdAndFloor,getMachineCialdeInfo}
+export{getAllCities,getSchoolsByCity,getMaxFloorBySchoolId,getMachineIdsBySchoolIdAndFloor,getMachineCialdeInfo,getMachineDetails,getMachineGuastiInfo,getMachineCassaInfo}
