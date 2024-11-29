@@ -8,7 +8,7 @@
 //import Subscriber from "./subscriber.js";
 import { getMachineCialdeInfo,getMachineCassaInfo,getMachineGuastiInfo } from "./api.js";
 import { loadCitiesAndSchools } from "./templates/citta-istituti-piani-macchinette.js";
-import {createCialdeTable,renderMachineDetails} from "./templates/tabelle_templete.js"
+import {createCialdeTable,renderMachineDetails,createGuastiTable} from "./templates/tabelle_templete.js"
 
 class App{
     constructor(appContainer,menu){
@@ -150,7 +150,7 @@ class App{
                 const cialdeInfo = await getMachineCialdeInfo(machineId);
                 const guastiInfo =await getMachineGuastiInfo(machineId);
                 //const cassaInfo=await getMachineCassaInfo(machineId);
-                await this.updateView(machineId,cialdeInfo);
+                await this.updateView(machineId,cialdeInfo,guastiInfo);
                 //console.log('Informazioni cialde ricevute:', machineInfo);
                 // Qui puoi gestire l'output come preferisci, ad esempio aggiornando l'interfaccia utente
             } catch (error) {

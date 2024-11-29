@@ -22,138 +22,142 @@ let client = null;
 
 function getClient() {
     if (!client) {
+        // Crea una connessione MQTT solo una volta
         client = mqtt.connect('tcp://broker.emqx.io:1883');
+        
+        // Gestisci gli errori di connessione
         client.on('error', (error) => {
             console.error('Errore di connessione:', error);
+        });
+
+        // Gestisci la connessione
+        client.on('connect', () => {
+            console.log('Connesso al broker MQTT');
+        });
+
+        client.on('reconnect', () => {
+            console.log('Riconnessione in corso...');
+        });
+
+        client.on('close', () => {
+            console.log('Connessione chiusa');
         });
     }
     return client;
 }
 
-exports.requestMachineInfoCialde = function(machineId) {    
-    return new Promise((resolve, reject) => {
-        const mqttClient = getClient();
-        console.log("Inizializzazione richiesta MQTT");
+exports.requestMachineInfoCialde = async function(machineId) {    
+    const mqttClient = getClient();
+    const responseTopicCialda = `/info/risposta/cialde/${machineId}`;
 
-        const responseTopicCialda = `/info/risposta/cialde/${machineId}`;
-        
-        
-        mqttClient.on('connect', () => {
-            console.log('Connesso al broker MQTT');
-            
-            const message = JSON.stringify({ id: machineId, richiesta: 'cialde' });
-                mqttClient.publish('/info', message, (error) => {
-                    if (error) {
-                        console.error('Errore nella pubblicazione:', error);
-                        reject(error);
-                        return;
-                    }
+    try {
+        await new Promise((resolve, reject) => {
+            const message="{ id: machineId, richiesta: 'cialde' }"
+            mqttClient.publish('/info', JSON.stringify(message), (error) => {
+                if (error) {
+                    console.error('Errore nella pubblicazione:', error);
+                    reject(error);
+                } else {
                     console.log('Messaggio pubblicato:', message);
-                });
-            
-            mqttClient.subscribe(responseTopicCialda, (err) => {
-                if (err) {
-                    console.error('Errore nella sottoscrizione:', err);
-                    reject(err);
-                    return;
+                    resolve();
                 }
             });
 
-            
+            mqttClient.subscribe(responseTopicCialda, (err) => {
+                if (err) {
+                    reject(err);
+                }
+            });
         });
 
-        mqttClient.on('message', (topic, message) => {
-            console.log('Messaggio ricevuto sul topic:', topic);
-            console.log('Contenuto del messaggio:', message.toString());
-            
-            try {
-                const cialdeInfo = JSON.parse(message.toString());
-                console.log('Informazioni cialde ricevute:', cialdeInfo);
-                resolve(cialdeInfo);
-            } catch (err) {
-                console.error('Errore nel parsing del messaggio:', err);
-                reject(err);
-            }
-        });
+        return new Promise((resolve, reject) => {
+            mqttClient.on('message', (topic, message) => {
+                console.log('Messaggio ricevuto sul topic:', topic);
+                try {
+                    const cialdeInfo = JSON.parse(message.toString());
+                    console.log('Informazioni cialde ricevute:', cialdeInfo);
+                    resolve(cialdeInfo);
+                } catch (err) {
+                    console.error('Errore nel parsing del messaggio:', err);
+                    reject(err);
+                }
+            });
 
-        setTimeout(() => {
-            reject(new Error('Timeout - Nessuna risposta ricevuta'));
-        }, 1000000);
-    });
+            setTimeout(() => {
+                reject(new Error('Timeout - Nessuna risposta ricevuta'));
+            }, 1000);
+        });
+    } catch (err) {
+        throw new Error('Errore nella richiesta di informazioni per le cialde');
+    }
 };
 
+exports.requestMachineInfoGuasti = async function(machineId) {    
+    const mqttClient = getClient();
+    const responseTopicGuasti = `/info/risposta/guasti/${machineId}`;
 
-exports.requestMachineInfoGuasti = function(machineId) {    
-    return new Promise((resolve, reject) => {
-        const mqttClient = getClient();
-        console.log("Inizializzazione richiesta MQTT");
-
-        const responseTopicGuasti = `/info/risposta/guasti/${machineId}`;
-        
-        
-        mqttClient.on('connect', () => {
-            console.log('Connesso al broker MQTT');
-            
-            const message = JSON.stringify({ id: machineId, richiesta: 'cialde' });
-                mqttClient.publish('/info', message, (error) => {
-                    if (error) {
-                        console.error('Errore nella pubblicazione:', error);
-                        reject(error);
-                        return;
-                    }
+    try {
+        await new Promise((resolve, reject) => {
+            const message="{ id: machineId, richiesta: 'guasti' }"
+            mqttClient.publish('/info', JSON.stringify(message), (error) => {
+                if (error) {
+                    console.error('Errore nella pubblicazione:', error);
+                    reject(error);
+                } else {
                     console.log('Messaggio pubblicato:', message);
-                });
+                    resolve();
+                }
+            });
 
             mqttClient.subscribe(responseTopicGuasti, (err) => {
                 if (err) {
-                    console.error('Errore nella sottoscrizione:', err);
                     reject(err);
-                    return;
                 }
             });
         });
 
-        mqttClient.on('message', (topic, message) => {
-            console.log('Messaggio ricevuto sul topic:', topic);
-            console.log('Contenuto del messaggio:', message.toString());
-            
-            try {
-                const cialdeInfo = JSON.parse(message.toString());
-                console.log('Informazioni cialde ricevute:', cialdeInfo);
-                resolve(cialdeInfo);
-            } catch (err) {
-                console.error('Errore nel parsing del messaggio:', err);
-                reject(err);
-            }
-        });
+        return new Promise((resolve, reject) => {
+            mqttClient.on('message', (topic, message) => {
+                console.log('Messaggio ricevuto sul topic:', topic);
+                try {
+                    const guastiInfo = JSON.parse(message.toString());
+                    console.log('Informazioni guasti ricevute:', guastiInfo);
+                    resolve(guastiInfo);
+                } catch (err) {
+                    console.error('Errore nel parsing del messaggio:', err);
+                    reject(err);
+                }
+            });
 
-        setTimeout(() => {
-            reject(new Error('Timeout - Nessuna risposta ricevuta'));
-        }, 1000000);
-    });
+            setTimeout(() => {
+                reject(new Error('Timeout - Nessuna risposta ricevuta'));
+            }, 1000);
+        });
+    } catch (err) {
+        throw new Error('Errore nella richiesta di informazioni per i guasti');
+    }
 };
 
 
 exports.requestMachineInfoCassa = function(machineId) {    
     return new Promise((resolve, reject) => {
-        const mqttClient = getClient();
-        console.log("Inizializzazione richiesta MQTT");
+        const mqttClient = getClient();  // Usa il client già connesso
 
         const responseTopicCassa = `/info/risposta/cassa/${machineId}`;
-        
         
         mqttClient.on('connect', () => {
             console.log('Connesso al broker MQTT');
             
-            const message = JSON.stringify({ id: machineId, richiesta: 'cialde' });
-                mqttClient.publish('/info', message, (error) => {
-                    if (error) {
-                        console.error('Errore nella pubblicazione:', error);
-                        reject(error);
-                        return;
-                    }
-                    console.log('Messaggio pubblicato:', message);
-                });
+            const message = JSON.stringify({ id: machineId, richiesta: 'cassa' });
+            
+            mqttClient.publish('/info', message, (error) => {
+                if (error) {
+                    console.error('Errore nella pubblicazione:', error);
+                    reject(error);
+                    return;
+                }
+                console.log('Messaggio pubblicato:', message);
+            });
             
             mqttClient.subscribe(responseTopicCassa, (err) => {
                 if (err) {
@@ -169,9 +173,9 @@ exports.requestMachineInfoCassa = function(machineId) {
             console.log('Contenuto del messaggio:', message.toString());
             
             try {
-                const cialdeInfo = JSON.parse(message.toString());
-                console.log('Informazioni cialde ricevute:', cialdeInfo);
-                resolve(cialdeInfo);
+                const cassaInfo = JSON.parse(message.toString());
+                console.log('Informazioni cassa ricevute:', cassaInfo);
+                resolve(cassaInfo);
             } catch (err) {
                 console.error('Errore nel parsing del messaggio:', err);
                 reject(err);
@@ -179,8 +183,8 @@ exports.requestMachineInfoCassa = function(machineId) {
         });
 
         setTimeout(() => {
-            reject(new Error('Timeout - Nessuna risposta ricevuta'));
-        }, 1000000);
+            reject(new Error('Timeout - Nessuna risposta ricevuta per cassa'));
+        }, 10000);  // Imposta un timeout più realistico (10 secondi)
     });
 };
 
@@ -339,69 +343,4 @@ exports.getMachineDetailsById = function(machineId) {
     });
 };
 
-
-/*exports.requestMachineInfoCialde = function (machineId) {    
-    console.log("00000000000000000000000000000")
-    return new Promise((resolve, reject) => {
-        // Gestisci gli errori di connessione
-        client.on('error', (error) => {
-            console.error('Errore di connessione:', error);
-            reject(error);
-            client.end();
-        });
-
-        client.on('connect', () => {
-            console.log('Connesso al broker MQTT');
-            
-            // Sottoscrivi al topic di risposta prima di pubblicare la richiesta
-            const responseTopic = '/info/risposta/${machineId}';
-            client.subscribe(responseTopic, (err) => {
-                if (err) {
-                    console.error('Errore nella sottoscrizione:', err);
-                    reject(err);
-                    client.end();
-                    return;
-                }
-                
-                // Pubblica il messaggio di richiesta
-                const message = JSON.stringify({ id: machineId, richiesta: 'cialde' });
-                client.publish('/info', message, (error) => {
-                    if (error) {
-                        console.error('Errore nella pubblicazione:', error);
-                        reject(error);
-                        client.end();
-                        return;
-                    }
-                    console.log('Messaggio pubblicato:', message);
-                });
-            });
-        });
-
-        // Gestione dei messaggi in arrivo
-        client.on('message', (topic, message) => {
-            console.log('Messaggio ricevuto sul topic:', topic);
-            console.log('Contenuto del messaggio:', message.toString());
-            
-            if (topic === '/info/risposta/${machineId}') {
-                try {
-                    const cialdeInfo = JSON.parse(message.toString());
-                    console.log('Informazioni cialde ricevute:', cialdeInfo);
-                    resolve(cialdeInfo);
-                } catch (err) {
-                    console.error('Errore nel parsing del messaggio:', err);
-                    reject(err);
-                } finally {
-                    client.end();
-                }
-            }
-        });
-
-        // Timeout dopo 10 secondi se non si riceve risposta
-        setTimeout(() => {
-            console.log('Timeout della richiesta');
-            reject(new Error('Timeout - Nessuna risposta ricevuta'));
-            client.end();
-        }, 10000);
-    });
-};*/
 
