@@ -22,6 +22,7 @@ body{
 
 #menu{
       background-color:#8ecfc9;
+      height: auto;
       font-family: 'Montserrat', sans-serif;
       color: black;
       font-size: 13pt;
@@ -420,4 +421,18 @@ h1 {
 .dropdown.active .dropdown-content,
 .school.active .floors {
   max-height: 1000px; /* Un'altezza molto alta per consentire l'espansione */
+}
+
+#addMachineButton{
+  position: relative; 
+  left: 1100px;
+  padding: 10px 20px; 
+  margin-bottom: 10px;
+
+  margin-top: 10px;
+  background-color: #4CAF50; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer
 }

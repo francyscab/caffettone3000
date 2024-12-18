@@ -29,7 +29,7 @@ function createFiltri(){
 
 function createAggiungi(){
     return `<!--button aggiungi-->
-    <button id="aggiungi" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">+</button>
+    <button id="addMachineButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">+</button>
     <!--modal-->
     <div class="row">
         <div class="modal" id="add-modal" tabindex="-1">

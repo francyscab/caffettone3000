@@ -32,6 +32,7 @@ async function loadCitiesAndSchools() {
                 totalMarkup += `
                     <li class="school">
                         <button class="school-name" id="school-${school.id}">${school.nome}</button>
+                        ${createAddMachine(school.id,city.citta)}
                         <ul class="floors" id="floors-${school.id}">
                             <!-- Qui verranno aggiunti i piani -->
                 `;
@@ -77,4 +78,79 @@ async function loadCitiesAndSchools() {
     return totalMarkup;
 }
 
-export{loadCitiesAndSchools}
+function createAddMachine(schoolName,cityName) {
+    return `<!--button aggiungi-->
+    <button id="addMachineButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal" data-scuola="${schoolName}" 
+    data-citta="${cityName}">+</button>
+    <!--modal-->
+    <div class="row">
+        <div class="modal" id="add-modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Aggiungi un nuovo istituto</h5>
+                        <button id="close-modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form role="form" method="POST" id="add-machin-form">
+                        <div class="modal-body">              
+                            <div class="mb-3">
+                                <label for="piano" class="col-form-label">Città</label>
+                                <input type="number" id="piano_form" required class="form-control" min="0" max="15"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div>
+                                    <button type="submit" class="btn btn-primary">Salva</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
+function createAddSchool() {
+    return `<!--button aggiungi-->
+    <button id="addSchoolButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">+</button>
+    <!--modal-->
+    <div class="row">
+        <div class="modal" id="add-modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Aggiungi un nuovo istituto</h5>
+                        <button id="close-modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form role="form" method="POST" id="add-school-form">
+                        <div class="modal-body">              
+                            <div class="mb-3">
+                                <label for="citta" class="col-form-label">Città</label>
+                                <input type="text" id="citta_form" required class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="istituto" class="col-form-label">Istituto</label>
+                                <input type="text" id="istituto_form" required class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="indirizzo" class="col-form-label">Indirizzo</label>
+                                <input type="text" id="indirizzo_form" required class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div>
+                                    <button type="submit" class="btn btn-primary">Salva</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
+export{loadCitiesAndSchools,createAddSchool}

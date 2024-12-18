@@ -6,9 +6,9 @@
 //import page from "//unpkg.com/page/page.mjs";
 //import Evento from "./evento.js";
 //import Subscriber from "./subscriber.js";
-import { getMachineCialdeInfo,getMachineCassaInfo,getMachineGuastiInfo } from "./api.js";
-import { loadCitiesAndSchools } from "./templates/citta-istituti-piani-macchinette.js";
-import {createCialdeTable,renderMachineDetails,createGuastiTable} from "./templates/tabelle_templete.js"
+import {addSchool, getMachineCialdeInfo,getMachineCassaInfo,getMachineGuastiInfo } from "./api.js";
+import { loadCitiesAndSchools,createAddSchool } from "./templates/citta-istituti-piani-macchinette.js";
+import {createCialdeTable,renderMachineDetails,createGuastiTable,createCassaTable} from "./templates/tabelle_templete.js"
 
 class App{
     constructor(appContainer,menu){
@@ -100,8 +100,12 @@ class App{
 
     async init(menu) {
         const menuMarkup = await loadCitiesAndSchools();
+        const buttonHTML = createAddSchool();
+        menu.insertAdjacentHTML('beforeend', buttonHTML);
         menu.insertAdjacentHTML("beforeend", menuMarkup);
-        
+
+        document.getElementById('add-school-form').addEventListener('submit',this.addIstituto)
+        document.getElementById('add-machine-form').addEventListener('submit',this.addMachine)
         const dropBtns = document.querySelectorAll('.dropbtn');
         dropBtns.forEach((btn) => {
             btn.addEventListener('click', function () {
@@ -112,6 +116,47 @@ class App{
                 console.log('Classe "active" aggiunta a:', this.parentElement); // Stampa il contenitore a cui viene aggiunta la classe active
             });
         });
+
+        /*document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("add-form");
+            console.log(form);
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault(); // Evita il comportamento predefinito del form
+        
+                // Estrai i dati dal form
+                const citta = document.getElementById("citta_form").value;
+                const istituto = document.getElementById("istituto_form").value;
+                const piano = document.getElementById("piano_form").value;
+        
+                // Crea l'oggetto da inviare
+                const machineData = {
+                    citta: citta,
+                    istituto: istituto,
+                    piano: parseInt(piano, 10), // Assicura che il piano sia un numero
+                };
+                
+                try {
+                    // Chiama la funzione addMachine con i dati del form
+                    console.log("sto chiamando addMachine in api con i dati "+ machineData)
+                    await addMachine(machineData);
+        
+                    // Notifica il successo (opzionale)
+                    alert("Macchinetta aggiunta con successo!");
+        
+                    // Reset del form
+                    form.reset();
+        
+                    // Chiudi il modal (opzionale)
+                    const modal = bootstrap.Modal.getInstance(document.getElementById("add-modal"));
+                    modal.hide();
+                } catch (error) {
+                    // Gestione degli errori
+                    console.error("Errore nell'aggiunta della macchinetta:", error);
+                    alert("Errore nell'aggiunta della macchinetta. Riprova.");
+                }
+            });
+        });*/
+        
 
         // Gestione del click sugli elementi delle scuole
         const schoolHeaders = document.querySelectorAll('.school .school-name');
@@ -148,10 +193,12 @@ class App{
                 console.log('Informazioni cialde richieste per :', machineId);
                 
                 const cialdeInfo = await getMachineCialdeInfo(machineId);
+                console.log('Informazioni cialde ricevute:', cialdeInfo);
                 const guastiInfo =await getMachineGuastiInfo(machineId);
-                //const cassaInfo=await getMachineCassaInfo(machineId);
-                await this.updateView(machineId,cialdeInfo,guastiInfo);
-                //console.log('Informazioni cialde ricevute:', machineInfo);
+                console.log('Informazioni guasti ricevute:', guastiInfo);
+                const cassaInfo=await getMachineCassaInfo(machineId);
+                console.log('Informazioni cassa ricevute:', cassaInfo);
+                await this.updateView(machineId,cialdeInfo,guastiInfo,cassaInfo);
                 // Qui puoi gestire l'output come preferisci, ad esempio aggiornando l'interfaccia utente
             } catch (error) {
                 console.error('Errore nel recupero delle informazioni sulle cialde:', error);
@@ -161,12 +208,84 @@ class App{
         });
     }
 
-    updateView=async(machineId,cialdeInfo,guastiInfo)=>{
+    addMachine =async(event)=>{
+        event.preventDefault();
+        const schoolID = addMachineButton.getAttribute('data-scuola');
+        const cityName = addMachineButton.getAttribute('data-citta');
+        const piano = document.getElementById("piano-form").value;
+
+    const machineData = {
+        piano: piano,
+        scuola: schoolID,
+        citta: cityName,
+    };
+
+        try {
+            // Chiama la funzione addMachine con i dati del form
+            console.log("sto chiamando add Machine in api con i dati "+ machineData)
+            await addMachine(machineData);
+
+            // Notifica il successo (opzionale)
+            alert("Macchinetta aggiunta con successo!");
+
+            // Reset del form
+            form.reset();
+
+            // Chiudi il modal (opzionale)
+            const modal = bootstrap.Modal.getInstance(document.getElementById("add-machine-modal"));
+            modal.hide();
+        } catch (error) {
+            // Gestione degli errori
+            console.error("Errore nell'aggiunta della macchinetta:", error);
+            alert("Errore nell'aggiunta della macchinetta. Riprova.");
+        }
+
+
+    }
+    addIstituto = async (event) => {
+        event.preventDefault(); // Evita il comportamento predefinito del form
+        
+        // Estrai i dati dal form
+        const citta = document.getElementById("citta_form").value;
+        const istituto = document.getElementById("istituto_form").value;
+        const indirizzo = document.getElementById("indirizzo_form").value;
+
+        // Crea l'oggetto da inviare
+        const istitutoData = {
+            citta: citta,
+            nome: istituto,
+            indirizzo: indirizzo,
+        };
+        
+        try {
+            // Chiama la funzione addMachine con i dati del form
+            console.log("sto chiamando add Istituto in api con i dati "+ istitutoData)
+            await addSchool(istitutoData);
+
+            // Notifica il successo (opzionale)
+            alert("Scuola aggiunta con successo!");
+
+            // Reset del form
+            form.reset();
+
+            // Chiudi il modal (opzionale)
+            const modal = bootstrap.Modal.getInstance(document.getElementById("add-modal"));
+            modal.hide();
+        } catch (error) {
+            // Gestione degli errori
+            console.error("Errore nell'aggiunta dell'istituto:", error);
+            alert("Errore nell'aggiunta dell'istituto. Riprova.");
+        }
+    }
+
+
+    updateView=async(machineId,cialdeInfo,guastiInfo,cassaInfo)=>{
         // Svuota il contenitore principale
         this.appContainer.innerHTML = `
             <div id="machineDetailsContainer"></div>
             <div id="cialdeTableContainer"></div>
             <div id="guastiTableContainer"></div>
+            <div id="cassaTableContainer"></div>
     `   ;
 
         // Renderizza i dettagli della macchinetta
@@ -188,9 +307,19 @@ class App{
         // Inserisci la tabella vuota nel contenitore
         const guastiTableContainer = document.getElementById('guastiTableContainer');
         if (guastiTableContainer) {
-            guastiContainer.innerHTML = guastiTableHTML;
+            guastiTableContainer.innerHTML = guastiTableHTML;
         } else {
             console.error("Contenitore per la tabella dei guasti non trovato.");
+        }
+        // Genera una tabella vuota per la cassa
+        const cassaTableHTML = await createCassaTable(cassaInfo);
+
+        // Inserisci la tabella vuota nel contenitore
+        const cassaTableContainer = document.getElementById('cassaTableContainer');
+        if (cassaTableContainer) {
+            cassaTableContainer.innerHTML = cassaTableHTML;
+        } else {
+            console.error("Contenitore per la tabella della cassa non trovato.");
         }
     }
     

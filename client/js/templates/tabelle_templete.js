@@ -2,6 +2,62 @@
 
 import { getMachineDetails } from "../api.js";
 
+// Funzione che genera il markup HTML per la tabella delle cassa
+async function createCassaTable(cassaData) {
+    let tableHTML = `
+        <h2>Transazioni</h2>
+        <table id="cassaTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                    <th>Bevanda</th>
+                    <th>Zucchero</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    try {
+        // Verifica che l'input sia un array di oggetti validi
+        if (!Array.isArray(cassaData)) {
+            throw new Error("L'input deve essere un array di oggetti JSON.");
+        }
+
+        // Aggiunge il markup per ogni cialda
+        tableHTML += cassaData.map(cassa => {
+            if (
+                cassa.id === undefined || 
+                cassa.timestamp === undefined || 
+                cassa.sugar === undefined || 
+                cassa.bevanda === undefined
+            ) {
+                console.error("Oggetto cassa non valido:", cassa);
+                return `<tr><td colspan="4">Dati mancanti per una cassa</td></tr>`;
+            }
+            return `
+                <tr>
+                    <td>${cassa.id}</td>
+                    <td>${cassa.timestamp}</td>
+                    <td>${cassa.bevanda}</td>
+                    <td>${cassa.sugar}</td>
+                </tr>
+            `;
+        }).join('');
+
+        // Chiude la tabella
+        tableHTML += `
+            </tbody>
+        </table>
+        `;
+    } catch (error) {
+        console.error("Errore durante la creazione della tabella della cassa:", error);
+        tableHTML = `<p>Errore: ${error.message}</p>`;
+    }
+
+    return tableHTML;
+}
+
 // Funzione che genera il markup HTML per la tabella delle cialde
 async function createCialdeTable(cialdeData) {
     let tableHTML = `
@@ -89,7 +145,7 @@ async function createGuastiTable(guastiData) {
             return `
                 <tr>
                     <td>${guasto.tipo}</td>
-                    <td>${fuasto.stato}</td>
+                    <td>${guasto.stato}</td>
                 </tr>
             `;
         }).join('');
@@ -106,6 +162,8 @@ async function createGuastiTable(guastiData) {
 
     return tableHTML;
 }
+
+
 
 async function renderMachineDetails(machineId) {
     try {
@@ -136,4 +194,7 @@ async function renderMachineDetails(machineId) {
     }
 }
 
-export { createCialdeTable,renderMachineDetails,createGuastiTable };
+
+
+
+export { createCassaTable,createCialdeTable,createGuastiTable,renderMachineDetails};

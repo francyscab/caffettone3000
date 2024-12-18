@@ -13,19 +13,36 @@ async function getEvents() {
     } else {
         throw eventiJson;  // an object with the error coming from the server
     }
-}*//*
+}*/
 
-async function addEvent(event) {
-    console.log("add event")
-    let response = await fetch('/api/eventi', {
+async function addSchool(event) {
+    console.log("add school")
+    let response = await fetch('/api/new/school', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
         },
         body: JSON.stringify(event),
     })
+    if(response.ok) {
+        
+        return ;
+    }
+    else {
+        const respJson = await response.json();
+            throw respJson;
+    }
+}
 
-    
+async function addMachine(event) {
+    console.log("add machine")
+    let response = await fetch('/api/new/machine', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify(event),
+    })
     if(response.ok) {
         
         return ;
@@ -88,6 +105,7 @@ async function getSchoolsByCity(city) {
     let response = await fetch(`/api/scuole/${city}`);
     const schoolsJson = await response.json();
     if (response.ok) {
+        console.log(response)
         return schoolsJson;
     } else {
         throw schoolsJson;
@@ -211,4 +229,4 @@ async function getMachineDetails(machineId) {
 }
 
 //export {getEvents,addEvent,getByCourse,getSubscribers,getSubByID};
-export{getAllCities,getSchoolsByCity,getMaxFloorBySchoolId,getMachineIdsBySchoolIdAndFloor,getMachineCialdeInfo,getMachineDetails,getMachineGuastiInfo,getMachineCassaInfo}
+export{getAllCities,getSchoolsByCity,getMaxFloorBySchoolId,getMachineIdsBySchoolIdAndFloor,getMachineCialdeInfo,getMachineDetails,getMachineGuastiInfo,getMachineCassaInfo,addSchool,addMachine}

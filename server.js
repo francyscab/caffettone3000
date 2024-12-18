@@ -84,5 +84,31 @@ app.get('/api/macchinetta/dettagli/:machineId', (req, res) => {
         .catch(error => res.status(500).json({ error: 'Errore nel recupero dei dettagli della macchinetta', details: error.message }));
 });
 
+app.post('/api/new/school', (req, res) => {
+    const schoolData = req.body; // Dati inviati dal client
+    console.log("body:"+ req.body)
+    axios.post('http://localhost:3001/api/new/school', schoolData) // Chiamata al server Java
+        .then(response => res.json(response.data)) // Risposta dal server Java
+        .catch(error => 
+            res.status(500).json({ 
+                error: 'Errore nell\'invio dei dettagli della scuola', 
+                details: error.message 
+            })
+        );
+});
+
+app.post('/api/new/machine', (req, res) => {
+    const machineData = req.body; // Dati inviati dal client
+    console.log("body:"+ req.body)
+    axios.post('http://localhost:3001/api/new/machine', machineData) // Chiamata al server Java
+        .then(response => res.json(response.data)) // Risposta dal server Java
+        .catch(error => 
+            res.status(500).json({ 
+                error: 'Errore nell\'invio dei dettagli della macchinetta', 
+                details: error.message 
+            })
+        );
+});
+
 // Start server
 app.listen(port, () => console.log(`Server listening at http://localhost:${port}`));
