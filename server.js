@@ -99,7 +99,7 @@ app.post('/api/new/school', (req, res) => {
 
 app.post('/api/new/machine', (req, res) => {
     const machineData = req.body; // Dati inviati dal client
-    console.log("body:"+ req.body)
+    console.log("Body:", JSON.stringify(req.body, null, 2));
     axios.post('http://localhost:3001/api/new/machine', machineData) // Chiamata al server Java
         .then(response => res.json(response.data)) // Risposta dal server Java
         .catch(error => 

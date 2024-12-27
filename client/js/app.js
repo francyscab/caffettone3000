@@ -6,7 +6,7 @@
 //import page from "//unpkg.com/page/page.mjs";
 //import Evento from "./evento.js";
 //import Subscriber from "./subscriber.js";
-import {addSchool, getMachineCialdeInfo,getMachineCassaInfo,getMachineGuastiInfo } from "./api.js";
+import {addSchool, getMachineCialdeInfo,getMachineCassaInfo,getMachineGuastiInfo,addMachine} from "./api.js";
 import { loadCitiesAndSchools,createAddSchool } from "./templates/citta-istituti-piani-macchinette.js";
 import {createCialdeTable,renderMachineDetails,createGuastiTable,createCassaTable} from "./templates/tabelle_templete.js"
 
@@ -105,7 +105,7 @@ class App{
         menu.insertAdjacentHTML("beforeend", menuMarkup);
 
         document.getElementById('add-school-form').addEventListener('submit',this.addIstituto)
-        document.getElementById('add-machine-form').addEventListener('submit',this.addMachine)
+        const addMachine = this.addMachine.bind(this);
         const dropBtns = document.querySelectorAll('.dropbtn');
         dropBtns.forEach((btn) => {
             btn.addEventListener('click', function () {
@@ -114,48 +114,30 @@ class App{
                 console.log('Contenuto dropdown trovato:', dropdownContent);
                 this.parentElement.classList.toggle('active');
                 console.log('Classe "active" aggiunta a:', this.parentElement); // Stampa il contenitore a cui viene aggiunta la classe active
+                
+                document.getElementById('add-machine-form').addEventListener('submit',addMachine);
             });
         });
 
-        /*document.addEventListener("DOMContentLoaded", () => {
-            const form = document.getElementById("add-form");
-            console.log(form);
-            form.addEventListener("submit", async (event) => {
-                event.preventDefault(); // Evita il comportamento predefinito del form
+        // Aggiungi il listener per tutti i bottoni "addMachineButton"
+    const machineButtons = document.querySelectorAll('#addMachineButton');
+    machineButtons.forEach((button) => {
+        button.addEventListener('click', function () {
+            // Recupera i dati dal bottone cliccato
+            const schoolName = button.getAttribute('data-scuola');
+
+            console.log('Bottone cliccato - Scuola:', schoolName);
+
+            // Memorizza i dati nel form per recupero durante il submit
+            const form = document.getElementById('add-machine-form');
+            form.dataset.scuola = schoolName;
+        });
+    });
+
+    // Listener per il submit del form "add-machine-form"
+    const addMachineForm = document.getElementById('add-machine-form');
+    addMachineForm.addEventListener('submit', this.addMachine.bind(this));
         
-                // Estrai i dati dal form
-                const citta = document.getElementById("citta_form").value;
-                const istituto = document.getElementById("istituto_form").value;
-                const piano = document.getElementById("piano_form").value;
-        
-                // Crea l'oggetto da inviare
-                const machineData = {
-                    citta: citta,
-                    istituto: istituto,
-                    piano: parseInt(piano, 10), // Assicura che il piano sia un numero
-                };
-                
-                try {
-                    // Chiama la funzione addMachine con i dati del form
-                    console.log("sto chiamando addMachine in api con i dati "+ machineData)
-                    await addMachine(machineData);
-        
-                    // Notifica il successo (opzionale)
-                    alert("Macchinetta aggiunta con successo!");
-        
-                    // Reset del form
-                    form.reset();
-        
-                    // Chiudi il modal (opzionale)
-                    const modal = bootstrap.Modal.getInstance(document.getElementById("add-modal"));
-                    modal.hide();
-                } catch (error) {
-                    // Gestione degli errori
-                    console.error("Errore nell'aggiunta della macchinetta:", error);
-                    alert("Errore nell'aggiunta della macchinetta. Riprova.");
-                }
-            });
-        });*/
         
 
         // Gestione del click sugli elementi delle scuole
@@ -175,8 +157,8 @@ class App{
             });
         });
 
-        const machineButtons = document.querySelectorAll('.machine-button');
-        machineButtons.forEach((button) => {
+        const SchoolButtons = document.querySelectorAll('.machine-button');
+        SchoolButtons.forEach((button) => {
             button.addEventListener('click', async (event) => {
                 const buttonId = button.id; // Usa `button` al posto di `this`
                 const machineId = parseInt(buttonId.split('-')[1], 10);
@@ -210,37 +192,36 @@ class App{
 
     addMachine =async(event)=>{
         event.preventDefault();
-        const schoolID = addMachineButton.getAttribute('data-scuola');
-        const cityName = addMachineButton.getAttribute('data-citta');
-        const piano = document.getElementById("piano-form").value;
+         // Recupera i dati dal dataset del form
+        const form = event.target;
+        const schoolID = form.dataset.scuola;
+        const piano = document.getElementById("piano_form").value;
 
-    const machineData = {
-        piano: piano,
-        scuola: schoolID,
-        citta: cityName,
-    };
+        const machineData = {
+            piano: piano,
+            scuola: schoolID,
+        };
 
         try {
             // Chiama la funzione addMachine con i dati del form
-            console.log("sto chiamando add Machine in api con i dati "+ machineData)
+            console.log("sto chiamando add Machine in api con i dati "+ machineData.piano +" "+machineData.scuola)
             await addMachine(machineData);
 
-            // Notifica il successo (opzionale)
-            alert("Macchinetta aggiunta con successo!");
-
             // Reset del form
-            form.reset();
+        form.reset();
 
-            // Chiudi il modal (opzionale)
-            const modal = bootstrap.Modal.getInstance(document.getElementById("add-machine-modal"));
-            modal.hide();
+        // Chiudi il modal (opzionale)
+        const modal = bootstrap.Modal.getInstance(document.getElementById("add-machine-modal"));
+        modal.hide();
+
+        // Ricarica la pagina
+        location.reload();
+        
         } catch (error) {
             // Gestione degli errori
             console.error("Errore nell'aggiunta della macchinetta:", error);
             alert("Errore nell'aggiunta della macchinetta. Riprova.");
         }
-
-
     }
     addIstituto = async (event) => {
         event.preventDefault(); // Evita il comportamento predefinito del form

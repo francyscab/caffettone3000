@@ -32,7 +32,7 @@ async function loadCitiesAndSchools() {
                 totalMarkup += `
                     <li class="school">
                         <button class="school-name" id="school-${school.id}">${school.nome}</button>
-                        ${createAddMachine(school.id,city.citta)}
+                        ${createAddMachine(school.id)}
                         <ul class="floors" id="floors-${school.id}">
                             <!-- Qui verranno aggiunti i piani -->
                 `;
@@ -80,21 +80,20 @@ async function loadCitiesAndSchools() {
 
 function createAddMachine(schoolName,cityName) {
     return `<!--button aggiungi-->
-    <button id="addMachineButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal" data-scuola="${schoolName}" 
-    data-citta="${cityName}">+</button>
+    <button id="addMachineButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-machine-modal" data-scuola="${schoolName}">+</button>
     <!--modal-->
     <div class="row">
-        <div class="modal" id="add-modal" tabindex="-1">
+        <div class="modal" id="add-machine-modal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Aggiungi un nuovo istituto</h5>
                         <button id="close-modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form role="form" method="POST" id="add-machin-form">
+                    <form role="form" method="POST" id="add-machine-form">
                         <div class="modal-body">              
                             <div class="mb-3">
-                                <label for="piano" class="col-form-label">Città</label>
+                                <label for="piano" class="col-form-label">Piano</label>
                                 <input type="number" id="piano_form" required class="form-control" min="0" max="15"/>
                             </div>
                         </div>
@@ -114,10 +113,10 @@ function createAddMachine(schoolName,cityName) {
 
 function createAddSchool() {
     return `<!--button aggiungi-->
-    <button id="addSchoolButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">+</button>
+    <button id="addSchoolButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-school-modal">+</button>
     <!--modal-->
     <div class="row">
-        <div class="modal" id="add-modal" tabindex="-1">
+        <div class="modal" id="add-school-modal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
