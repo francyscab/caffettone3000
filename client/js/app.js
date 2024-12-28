@@ -7,7 +7,7 @@
 //import Evento from "./evento.js";
 //import Subscriber from "./subscriber.js";
 import {addSchool, getMachineCialdeInfo,getMachineCassaInfo,getMachineGuastiInfo,addMachine} from "./api.js";
-import { loadCitiesAndSchools,createAddSchool } from "./templates/citta-istituti-piani-macchinette.js";
+import { loadCitiesAndSchools,createAddSchool,createAddMachineModal } from "./templates/citta-istituti-piani-macchinette.js";
 import {createCialdeTable,renderMachineDetails,createGuastiTable,createCassaTable} from "./templates/tabelle_templete.js"
 
 class App{
@@ -101,11 +101,13 @@ class App{
     async init(menu) {
         const menuMarkup = await loadCitiesAndSchools();
         const buttonHTML = createAddSchool();
+        const modale=createAddMachineModal();
         menu.insertAdjacentHTML('beforeend', buttonHTML);
         menu.insertAdjacentHTML("beforeend", menuMarkup);
+        menu.insertAdjacentHTML('beforeend',modale);
 
         document.getElementById('add-school-form').addEventListener('submit',this.addIstituto)
-        const addMachine = this.addMachine.bind(this);
+        const machineAdd = this.machineAdd.bind(this);
         const dropBtns = document.querySelectorAll('.dropbtn');
         dropBtns.forEach((btn) => {
             btn.addEventListener('click', function () {
@@ -115,13 +117,13 @@ class App{
                 this.parentElement.classList.toggle('active');
                 console.log('Classe "active" aggiunta a:', this.parentElement); // Stampa il contenitore a cui viene aggiunta la classe active
                 
-                document.getElementById('add-machine-form').addEventListener('submit',addMachine);
+                //document.getElementById('add-machine-form').addEventListener('submit',addMachine);
             });
         });
 
         // Aggiungi il listener per tutti i bottoni "addMachineButton"
-    const machineButtons = document.querySelectorAll('#addMachineButton');
-    machineButtons.forEach((button) => {
+        const machineButtons = document.querySelectorAll('#addMachineButton');
+        machineButtons.forEach((button) => {
         button.addEventListener('click', function () {
             // Recupera i dati dal bottone cliccato
             const schoolName = button.getAttribute('data-scuola');
@@ -131,15 +133,12 @@ class App{
             // Memorizza i dati nel form per recupero durante il submit
             const form = document.getElementById('add-machine-form');
             form.dataset.scuola = schoolName;
+            });
         });
-    });
 
-    // Listener per il submit del form "add-machine-form"
-    const addMachineForm = document.getElementById('add-machine-form');
-    addMachineForm.addEventListener('submit', this.addMachine.bind(this));
-        
-        
-
+        // Listener per il submit del form "add-machine-form"
+        const addMachineForm = document.getElementById('add-machine-form');
+        addMachineForm.addEventListener('submit', this.machineAdd.bind(this));
         // Gestione del click sugli elementi delle scuole
         const schoolHeaders = document.querySelectorAll('.school .school-name');
         schoolHeaders.forEach((school, index) => {
@@ -163,13 +162,6 @@ class App{
                 const buttonId = button.id; // Usa `button` al posto di `this`
                 const machineId = parseInt(buttonId.split('-')[1], 10);
                 console.log('Macchinetta cliccata:', machineId);
-        
-                /*try {
-                    await this.updateView(machineId); // Ora `this` si riferisce correttamente all'istanza di `App`
-                } catch (error) {
-                    console.error('Errore nel recupero delle informazioni:', error);
-                }*/
-
                 try {
                 // Richiama la funzione per ottenere le informazioni sulle cialde
                 console.log('Informazioni cialde richieste per :', machineId);
@@ -190,7 +182,7 @@ class App{
         });
     }
 
-    addMachine =async(event)=>{
+    machineAdd =async(event)=>{
         event.preventDefault();
          // Recupera i dati dal dataset del form
         const form = event.target;
@@ -216,7 +208,7 @@ class App{
 
         // Ricarica la pagina
         location.reload();
-        
+
         } catch (error) {
             // Gestione degli errori
             console.error("Errore nell'aggiunta della macchinetta:", error);

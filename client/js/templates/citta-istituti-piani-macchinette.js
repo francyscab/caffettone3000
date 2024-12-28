@@ -11,6 +11,7 @@ async function loadCitiesAndSchools() {
         const cities = await getAllCities();
         console.log("Città ottenute:", cities);
 
+
         // Passo 2: Per ogni città, ottieni le scuole
         for (const city of cities) {
             // Inizio del markup per la città
@@ -71,6 +72,8 @@ async function loadCitiesAndSchools() {
         }
 
         totalMarkup += '</ul>'; // Chiudi la lista principale delle città
+        //const modalHTML = createAddMachineModal();
+        //document.body.innerHTML += modalHTML; 
 
     } catch (error) {
         console.error("Errore durante il caricamento delle città o delle scuole:", error);
@@ -80,35 +83,7 @@ async function loadCitiesAndSchools() {
 
 function createAddMachine(schoolName,cityName) {
     return `<!--button aggiungi-->
-    <button id="addMachineButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-machine-modal" data-scuola="${schoolName}">+</button>
-    <!--modal-->
-    <div class="row">
-        <div class="modal" id="add-machine-modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Aggiungi un nuovo istituto</h5>
-                        <button id="close-modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form role="form" method="POST" id="add-machine-form">
-                        <div class="modal-body">              
-                            <div class="mb-3">
-                                <label for="piano" class="col-form-label">Piano</label>
-                                <input type="number" id="piano_form" required class="form-control" min="0" max="15"/>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="form-group">
-                                <div>
-                                    <button type="submit" class="btn btn-primary">Salva</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>`;
+    <button id="addMachineButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-machine-modal" data-scuola="${schoolName}">+</button>`;
 }
 
 function createAddSchool() {
@@ -152,4 +127,34 @@ function createAddSchool() {
     </div>`;
 }
 
-export{loadCitiesAndSchools,createAddSchool}
+function createAddMachineModal() {
+    return `
+    <div class="modal" id="add-machine-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Aggiungi una nuova macchinetta</h5>
+                    <button id="close-modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form role="form" method="POST" id="add-machine-form">
+                    <div class="modal-body">              
+                        <div class="mb-3">
+                            <label for="piano" class="col-form-label">Piano</label>
+                            <input type="number" id="piano_form" required class="form-control" min="0" max="15"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <div>
+                                <button type="submit" class="btn btn-primary">Salva</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>`;
+}
+
+
+export{loadCitiesAndSchools,createAddSchool,createAddMachineModal}

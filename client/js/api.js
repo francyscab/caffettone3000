@@ -25,7 +25,6 @@ async function addSchool(event) {
         body: JSON.stringify(event),
     })
     if(response.ok) {
-        
         return ;
     }
     else {
@@ -44,7 +43,6 @@ async function addMachine(event) {
         body: JSON.stringify(event),
     })
     if(response.ok) {
-        
         return ;
     }
     else {
