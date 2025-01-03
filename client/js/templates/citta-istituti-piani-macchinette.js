@@ -2,7 +2,6 @@
 
 // Importa le funzioni necessarie
 import { getAllCities,getSchoolsByCity,getMaxFloorBySchoolId,getMachineIdsBySchoolIdAndFloor } from "../api.js";
-
 // Funzione che genera il markup con le scuole all'interno dei <li>
 async function loadCitiesAndSchools() {
     let totalMarkup = '<ul>'; // Iniziamo una lista per contenere le città
@@ -10,8 +9,6 @@ async function loadCitiesAndSchools() {
         // Passo 1: Ottieni tutte le città
         const cities = await getAllCities();
         console.log("Città ottenute:", cities);
-
-
         // Passo 2: Per ogni città, ottieni le scuole
         for (const city of cities) {
             // Inizio del markup per la città
@@ -53,7 +50,11 @@ async function loadCitiesAndSchools() {
                             <li class="floor">
                                 <h4>Piano ${floor}</h4>
                                 <ul class="machine-list">
-                                    ${machineIds.map(id => `<li><button class="machine-button" id="machine-${id}">Macchinetta ID: ${id}</button></li>`).join('')}
+                                    ${machineIds.map(id => `<li>
+                                        <button class="machine-button" id="machine-${id}">Macchinetta ID: ${id}</button>
+                                        ${createDeleteMachine(school.id,id)}
+                                    </li>`).join('')}
+                        
                                 </ul>
                             </li>
                         `;
@@ -84,6 +85,11 @@ async function loadCitiesAndSchools() {
 function createAddMachine(schoolName,cityName) {
     return `<!--button aggiungi-->
     <button id="addMachineButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-machine-modal" data-scuola="${schoolName}">+</button>`;
+}
+
+function createDeleteMachine(schoolName,machineId) {
+    return `<!--button delete-->
+    <button id="deleteMachineButton" type="button" data-scuola="${schoolName}" data-machine="${machineId}">-</button>`;
 }
 
 function createAddSchool() {

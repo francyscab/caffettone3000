@@ -110,5 +110,18 @@ app.post('/api/new/machine', (req, res) => {
         );
 });
 
+app.delete('/api/delete/:machineId', (req, res) => {
+    console.log("server js")
+    const machineId = req.params.machineId;
+    axios.delete(`http://localhost:3001/api/delete/${machineId}`) // Chiamata al server Java
+        .then(response => res.json(response.data)) // Risposta dal server Java
+        .catch(error => 
+            res.status(500).json({ 
+                error: 'Errore nell\'invio dei dettagli della macchinetta', 
+                details: error.message 
+            })
+        );
+});
+
 // Start server
 app.listen(port, () => console.log(`Server listening at http://localhost:${port}`));

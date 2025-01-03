@@ -226,5 +226,21 @@ async function getMachineDetails(machineId) {
     }
 }
 
+async function deleteMachine(machineId) {
+    console.log("deleteMachine api")
+    // Esegui la richiesta all'endpoint API
+    const response = await fetch(`/api/delete/${machineId}`,{ method: 'DELETE' });
+    
+    // Converti la risposta in JSON
+    const machineDetails = await response.json();
+
+    // Controlla se la risposta è andata a buon fine
+    if (response.ok) {
+        return machineDetails;
+    } else {
+        throw new Error(machineDetails.message || "Errore durante l'eliminazione della macchinetta.");
+    }
+}
+
 //export {getEvents,addEvent,getByCourse,getSubscribers,getSubByID};
-export{getAllCities,getSchoolsByCity,getMaxFloorBySchoolId,getMachineIdsBySchoolIdAndFloor,getMachineCialdeInfo,getMachineDetails,getMachineGuastiInfo,getMachineCassaInfo,addSchool,addMachine}
+export{getAllCities,getSchoolsByCity,getMaxFloorBySchoolId,getMachineIdsBySchoolIdAndFloor,getMachineCialdeInfo,getMachineDetails,getMachineGuastiInfo,getMachineCassaInfo,addSchool,addMachine,deleteMachine}
