@@ -3,6 +3,9 @@ const express = require("express");
 const morgan = require("morgan");
 const path = require('path');
 const axios = require('axios'); // Importa axios per fare richieste HTTP
+const session=require('express-session');
+const { keycloak, memoryStore } = require("./middleware/keycloak");
+
 
 // init 
 const app = express();
@@ -19,6 +22,33 @@ app.use(express.urlencoded({ extended: true }));
 
 // interpreting json-encoded parameters
 app.use(express.json());
+
+// Configura la sessione PRIMA di Keycloak
+app.use(session({
+    secret: 'some secret',
+    resave: false,
+    saveUninitialized: true,
+    store: memoryStore,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 // 24 ore
+    }
+}));
+
+
+app.use(keycloak.middleware({
+    logout: '/logout',
+    admin: '/',  
+    protected: '/protected'
+}));
+
+// Proteggi le tue routes
+app.get("/test", [keycloak.protect()], async (req, res) => {
+    try {
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        return res.status(500).json({ success: false });
+    }
+});
 
 // Endpoint per ottenere tutte le scuole in città (solo una volta)
 app.get('/api/scuole/citta', (req, res) => {
