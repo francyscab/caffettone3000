@@ -1,10 +1,10 @@
-// imports
 const express = require("express");
 const morgan = require("morgan");
 const path = require('path');
-const axios = require('axios'); // Importa axios per fare richieste HTTP
-const session=require('express-session');
-const { keycloak, memoryStore } = require("./middleware/keycloak");
+const axios = require('axios');
+const session = require('express-session');
+const { keycloak, memoryStore,keycloakConfig } = require("./middleware/keycloak");
+const cors = require('cors');
 
 
 // init 
@@ -23,31 +23,71 @@ app.use(express.urlencoded({ extended: true }));
 // interpreting json-encoded parameters
 app.use(express.json());
 
+app.use(cors());
+
 // Configura la sessione PRIMA di Keycloak
 app.use(session({
-    secret: 'some secret',
+    secret: 'keyboard-cat',
     resave: false,
     saveUninitialized: true,
     store: memoryStore,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 // 24 ore
-    }
+        maxAge: 1000 * 60 * 60 * 24 // 24 ore
+    }
 }));
+app.use((req, res, next) => {
+    if (req.url.includes('auth_callback')) {
+        console.log('Auth Callback Details:', {
+            url: req.url,
+            headers: req.headers,
+            query: req.query,
+            token: req.kauth?.grant?.access_token?.content
+        });
+    }
+    next();
+});
 
+app.use(keycloak.middleware());
+app.use((req, res, next) => {
+    console.log('Request URL:', req.url);
+    console.log('Session:', req.session);
+    next();
+});
 
-app.use(keycloak.middleware({
-    logout: '/logout',
-    admin: '/',  
-    protected: '/protected'
-}));
-
+app.use((req, res, next) => {
+    console.log('Request URL:', req.url);
+    console.log('Session:', req.session);
+    console.log('Keycloak Config:', keycloakConfig);
+    next();
+});
 // Proteggi le tue routes
-app.get("/test", [keycloak.protect()], async (req, res) => {
+app.get("/test", [keycloak.protect('amministratore')], async (req, res) => {
     try {
-        return res.status(200).json({ success: true });
+        const userInfo = {
+            username: req.kauth.grant.access_token.content.preferred_username,
+            email: req.kauth.grant.access_token.content.email,
+            name: req.kauth.grant.access_token.content.name,
+            givenName: req.kauth.grant.access_token.content.given_name,
+            familyName: req.kauth.grant.access_token.content.family_name,
+            roles: {
+                realm: req.kauth.grant.access_token.content.realm_access?.roles,
+                resource: req.kauth.grant.access_token.content.resource_access
+            }
+        };
+
+        console.log('User Info:', userInfo);
+
+        return res.status(200).json({
+            success: true,
+            userInfo: userInfo
+        });
     } catch (error) {
-        return res.status(500).json({ success: false });
-    }
+        console.error('Test route error:', error);
+        return res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
 });
 
 // Endpoint per ottenere tutte le scuole in città (solo una volta)

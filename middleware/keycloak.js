@@ -2,25 +2,33 @@ const session = require('express-session');
 const Keycloak = require('keycloak-connect');
 
 const keycloakConfig = {
-    "realm": "master",
-    "auth-server-url": "http://localhost:8080/auth", 
+    "realm": "amministrazione-realm",
+    "auth-server-url": "http://127.0.0.1:8080/auth", // Modificato per usare IPv4
     "ssl-required": "external",
-    "resource": "amministrativa",
-    "public-client": true,        // importante per il redirect
+    "resource": "my-amministrativo",
+    "credentials": {
+        "secret": "574c8f1f-eea9-4658-a5b8-283384e764d4"
+    },
     "confidential-port": 0,
-    "enable-cors": true,          // abilita CORS
-    "bearer-only": false          // importante per il redirect
+    "verify-token-audience": false,
 };
 
 const memoryStore = new session.MemoryStore();
 
-// Configura le opzioni di keycloak
 const keycloakInstance = new Keycloak({
-    store: memoryStore,       
-    logout: '/logout'             // gestisce il logout
+    store: memoryStore,
+    secret: 'keyboard-cat',
+    resave: false,
+    saveUninitialized: true
 }, keycloakConfig);
+
+keycloakInstance.accessDenied = (req, res) => {
+    console.log('Access Denied. Token:', req.kauth?.grant?.access_token?.content);
+    res.status(403).json({ error: 'Access denied' });
+};
 
 module.exports = {
     keycloak: keycloakInstance,
-    memoryStore: memoryStore
+    memoryStore: memoryStore,
+    keycloakConfig
 };

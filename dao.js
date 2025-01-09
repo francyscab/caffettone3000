@@ -1,5 +1,5 @@
 
-"use strict";
+/**"use strict";
 
 // DAO (Data Access Object) module for accessing course and exams
 
@@ -343,4 +343,4 @@ exports.getMachineDetailsById = function(machineId) {
     });
 };
 
-
+**/
