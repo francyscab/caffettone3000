@@ -7,7 +7,7 @@ const keycloakConfig = {
     "ssl-required": "external",
     "resource": "my-amministrativo",
     "credentials": {
-        "secret": "663f85c2-6a8a-40bb-9ef8-9d5a1117091a"
+        "secret": "574c8f1f-eea9-4658-a5b8-283384e764d4"
     },
     "confidential-port": 0,
     "verify-token-audience": false,
