@@ -85,32 +85,45 @@
         </button>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <% macchinette.forEach(function(macchinetta) { %>
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="material-icons">local_cafe</i><%= macchinetta.id_macchinetta %>
-                        </h5>
-                        <p class="card-text">
-                            <i class="material-icons">place</i> Piano: <%= macchinetta.piano %>
-                        </p>
-                        <p class="card-text">
-                            <i class="material-icons">info</i> Stato: 
-                            <span class="badge <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %>">
-                                <%= macchinetta.status %>
-                            </span>
-                        </p>
-                        <p class="card-text">
-                            <i class="material-icons">event</i> Ultima Manutenzione: 
-                            <%= macchinetta.dataultima_manutenzione ? new Date(macchinetta.dataultima_manutenzione).toLocaleDateString() : 'mai' %>
-                        </p>
+    <%
+        // Raggruppa le macchinette per piano
+        const macchinettePerPiano = macchinette.reduce((acc, macchinetta) => {
+            if (!acc[macchinetta.piano]) {
+                acc[macchinetta.piano] = [];
+            }
+            acc[macchinetta.piano].push(macchinetta);
+            return acc;
+        }, {});
+    %>
+
+    <% Object.entries(macchinettePerPiano).sort((a, b) => a[0].localeCompare(b[0])).forEach(([piano, macchinettePiano]) => { %>
+        <div class="mb-4">
+            <h3 class="mb-3">Piano <%= piano %></h3>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <% macchinettePiano.forEach(function(macchinetta) { %>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="material-icons">local_cafe</i><%= macchinetta.id_macchinetta %>
+                                </h5>
+                                <p class="card-text">
+                                    <i class="material-icons">info</i> Stato: 
+                                    <span class="badge <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %>">
+                                        <%= macchinetta.status %>
+                                    </span>
+                                </p>
+                                <p class="card-text">
+                                    <i class="material-icons">event</i> Ultima Manutenzione: 
+                                    <%= macchinetta.dataultima_manutenzione ? new Date(macchinetta.dataultima_manutenzione).toLocaleDateString() : 'mai' %>
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                <% }); %>
             </div>
-        <% }); %>
-    </div>
+        </div>
+    <% }); %>
 </div>
 
 <div class="modal fade" id="nuovaMacchinaModal" tabindex="-1" aria-labelledby="nuovaMacchinaModalLabel" aria-hidden="true">
