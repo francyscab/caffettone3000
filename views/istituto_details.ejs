@@ -23,24 +23,30 @@
             border: none;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            transition: transform 0.2s ease-in-out;
             background-color: #ffffff;
+            margin-bottom: 1rem;
         }
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         .card-title {
-            color: #3f51b5;
-            font-weight: bold;
-            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
         }
         .card-text {
-            color: #757575;
-            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            color: #666;
         }
         .material-icons {
             vertical-align: middle;
-            margin-right: 8px;
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
         }
         .back-button {
             color: #3f51b5;
@@ -51,6 +57,19 @@
         }
         .back-button:hover {
             color: #283593;
+        }
+        .badge {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .row-cols-md-3 > * {
+            padding: 0.75rem;
+        }
+        h3 {
+            color: #3f51b5;
+            margin: 2rem 0 1rem;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -110,23 +129,33 @@
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <% macchinettePiano.forEach(function(macchinetta) { %>
                     <div class="col">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="material-icons">local_cafe</i><%= macchinetta.id_macchinetta %>
-                                </h5>
-                                <p class="card-text">
-                                    <i class="material-icons">info</i> Stato: 
-                                    <span class="badge <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %>">
-                                        <%= macchinetta.status %>
-                                    </span>
-                                </p>
-                                <p class="card-text">
-                                    <i class="material-icons">event</i> Ultima Manutenzione: 
-                                    <%= macchinetta.dataultima_manutenzione ? new Date(macchinetta.dataultima_manutenzione).toLocaleDateString() : 'mai' %>
-                                </p>
+                        <a href="/istituti/<%= istituto.id_istituto %>/macchinette/<%= macchinetta.id_macchinetta %>" 
+                           class="text-decoration-none">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="material-icons">local_cafe</i>
+                                        <span>Macchinetta <%= macchinetta.id_macchinetta %></span>
+                                    </h5>
+                                    <p class="card-text">
+                                        <i class="material-icons">info</i>
+                                        <span>Stato: 
+                                            <span class="badge ms-1 <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %>">
+                                                <%= macchinetta.status %>
+                                            </span>
+                                        </span>
+                                    </p>
+                                    <p class="card-text">
+                                        <i class="material-icons">event</i>
+                                        <span>Ultima Manutenzione: 
+                                            <%= macchinetta.data_ultima_manutenzione ? 
+                                                new Date(macchinetta.data_ultima_manutenzione).toLocaleDateString() : 
+                                                'mai' %>
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 <% }); %>
             </div>

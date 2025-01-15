@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Dettagli Macchinetta - Caffettone 3000</title>
+		<link href="/css/style.css" rel="stylesheet" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/icon?family=Material+Icons"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			body {
+				font-family: "Roboto", sans-serif;
+				background-color: #f5f5f5;
+			}
+			.container {
+				margin-top: 40px;
+			}
+			.card {
+				border: none;
+				border-radius: 12px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				background-color: #ffffff;
+			}
+			.status-badge {
+				font-size: 1.1em;
+				padding: 8px 16px;
+			}
+			.detail-icon {
+				font-size: 1.5rem;
+				color: #3f51b5;
+				margin-right: 10px;
+			}
+			.back-button {
+				color: #3f51b5;
+				text-decoration: none;
+				display: inline-flex;
+				align-items: center;
+				margin-bottom: 20px;
+			}
+			.back-button:hover {
+				color: #283593;
+			}
+			.stats-card {
+				background: linear-gradient(135deg, #3f51b5 0%, #5c6bc0 100%);
+				color: white;
+			}
+			.chart-container {
+				position: relative;
+				height: 400px;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<a
+				href="/istituti/<%= istituto.id_istituto %>/macchinette"
+				class="back-button"
+			>
+				<i class="material-icons">arrow_back</i> Torna all'Istituto
+			</a>
+
+			<div class="card mb-4">
+				<div class="card-body">
+					<!-- Sezione dettagli macchinetta -->
+					<div class="d-flex justify-content-between align-items-center mb-4">
+						<h1>
+							<i class="material-icons detail-icon">local_cafe</i>
+							Macchinetta <%= macchinetta.id_macchinetta %>
+						</h1>
+						<div>
+							<span
+								class="badge fs-6 status-badge <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %> me-2"
+							>
+								<%= macchinetta.status %>
+							</span>
+							<button
+								type="button"
+								class="btn btn-danger"
+								data-bs-toggle="modal"
+								data-bs-target="#deleteMacchinaModal"
+							>
+								<i class="material-icons">delete</i> Elimina
+							</button>
+						</div>
+					</div>
+
+					<!-- Card dei ricavi totali -->
+					<div class="row mb-4">
+						<div class="col-md-6">
+							<div class="card stats-card">
+								<div class="card-body">
+									<h5 class="card-title text-white">Ricavi Totali</h5>
+									<h2 class="mb-0" id="totaleRicavi">€ 0.00</h2>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Informazioni base -->
+					<div class="row">
+						<div class="col-md-6">
+							<p>
+								<i class="material-icons detail-icon">location_on</i>
+								Piano: <%= macchinetta.piano %>
+							</p>
+							<p>
+								<i class="material-icons detail-icon">event</i>
+								Data Installazione: <%= macchinetta.data_installazione ? new Date(macchinetta.data_installazione).toLocaleDateString() : 'Non disponibile' %>
+							</p>
+							<p>
+								<i class="material-icons detail-icon">build</i>
+								Ultima Manutenzione: <%= macchinetta.data_ultima_manutenzione ?
+								new
+								Date(macchinetta.data_ultima_manutenzione).toLocaleDateString()
+								: 'Mai effettuata' %>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<p>
+								<i class="material-icons detail-icon">inventory_2</i>
+								Ultimo Rifornimento: <%= macchinetta.data_ultimo_refill ? new Date(macchinetta.data_ultimo_refill).toLocaleDateString() : 'Mai effettuato' %>
+							</p>
+							<p>
+								<i class="material-icons detail-icon">euro</i>
+								Ultimo Svuotamento Cassa: <%=
+								macchinetta.data_ultimo_svuotamento_cassa ? new
+								Date(macchinetta.data_ultimo_svuotamento_cassa).toLocaleDateString()
+								: 'Mai effettuato' %>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Sezione Storico Ricavi -->
+			<div class="card mt-4">
+				<div class="card-body">
+					<h3 class="mb-4">
+						<i class="material-icons detail-icon">trending_up</i>
+						Storico Ricavi
+					</h3>
+
+					<!-- Grafico -->
+					<div class="chart-container mb-4">
+						<canvas id="ricaviChart"></canvas>
+					</div>
+
+					<!-- Tabella Ricavi -->
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Data</th>
+									<th>Importo</th>
+									<th>Operatore</th>
+								</tr>
+							</thead>
+							<tbody id="ricaviTableBody">
+								<tr>
+									<td colspan="3" class="text-center">Caricamento dati...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal di conferma eliminazione -->
+		<div
+			class="modal fade"
+			id="deleteMacchinaModal"
+			tabindex="-1"
+			aria-labelledby="deleteMacchinaModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteMacchinaModalLabel">
+							Conferma Eliminazione
+						</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="modal-body">
+						Sei sicuro di voler eliminare questa macchinetta? Questa azione non
+						può essere annullata.
+					</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-bs-dismiss="modal"
+						>
+							Annulla
+						</button>
+						<form
+							action="/istituti/<%= istituto.id_istituto %>/macchinette/<%= macchinetta.id_macchinetta %>/delete"
+							method="POST"
+							style="display: inline"
+						>
+							<button type="submit" class="btn btn-danger">
+								<i class="material-icons">delete_forever</i> Elimina
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+		
+		<script>
+			async function fetchRicaviMacchinetta() {
+				try {
+					const response = await fetch(
+						"/istituti/macchinetta/<%= macchinetta.id_macchinetta %>/ricavi"
+					);
+					if (response.status === 404) {
+						document.getElementById("totaleRicavi").textContent = "€ 0.00";
+						return;
+					}
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					const data = await response.json();
+					document.getElementById(
+						"totaleRicavi"
+					).textContent = `€ ${data.toFixed(2)}`;
+				} catch (error) {
+					console.error("Errore nel recupero dei ricavi:", error);
+					document.getElementById("totaleRicavi").textContent = "€ 0.00";
+				}
+			}
+
+			async function fetchStoricoRicavi() {
+				try {
+					const response = await fetch(
+						"/istituti/macchinetta/<%= macchinetta.id_macchinetta %>/storico-ricavi"
+					);
+					let ricavi = [];
+
+					if (response.status === 404) {
+						ricavi = [];
+					} else if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					} else {
+						ricavi = await response.json();
+					}
+
+					const tableBody = document.getElementById("ricaviTableBody");
+					if (ricavi.length === 0) {
+						tableBody.innerHTML =
+							'<tr><td colspan="3" class="text-center">Nessun ricavo registrato</td></tr>';
+					} else {
+						tableBody.innerHTML = ricavi
+							.sort((a, b) => new Date(b.data_ricavo) - new Date(a.data_ricavo))
+							.map(
+								(ricavo) => `
+                        <tr>
+                            <td>${new Date(
+															ricavo.data_ricavo
+														).toLocaleDateString()}</td>
+                            <td>€ ${ricavo.somma_ricavo.toFixed(2)}</td>
+                            <td>${ricavo.raccolto_da}</td>
+                        </tr>
+                    `
+							)
+							.join("");
+					}
+
+					const ctx = document.getElementById("ricaviChart").getContext("2d");
+
+					if (ricavi.length === 0) {
+						new Chart(ctx, {
+							type: "line",
+							data: {
+								labels: [],
+								datasets: [
+									{
+										label: "Ricavi Giornalieri",
+										data: [],
+										borderColor: "#3f51b5",
+										backgroundColor: "rgba(63, 81, 181, 0.1)",
+										tension: 0.4,
+										fill: true,
+									},
+								],
+							},
+							options: {
+								responsive: true,
+								maintainAspectRatio: false,
+								plugins: {
+									legend: {
+										position: "top",
+									},
+									title: {
+										display: true,
+										text: "Nessun ricavo registrato",
+									},
+								},
+								scales: {
+									y: {
+										beginAtZero: true,
+										ticks: {
+											callback: function (value) {
+												return "€ " + value.toFixed(2);
+											},
+										},
+									},
+								},
+							},
+						});
+					} else {
+						const ricaviPerData = ricavi.reduce((acc, ricavo) => {
+							const data = new Date(ricavo.data_ricavo).toLocaleDateString();
+							if (!acc[data]) {
+								acc[data] = 0;
+							}
+							acc[data] += parseFloat(ricavo.somma_ricavo);
+							return acc;
+						}, {});
+
+						const labels = Object.keys(ricaviPerData).sort(
+							(a, b) => new Date(a) - new Date(b)
+						);
+						const values = labels.map((label) => ricaviPerData[label]);
+
+						new Chart(ctx, {
+							type: "line",
+							data: {
+								labels: labels,
+								datasets: [
+									{
+										label: "Ricavi Giornalieri",
+										data: values,
+										borderColor: "#3f51b5",
+										backgroundColor: "rgba(63, 81, 181, 0.1)",
+										tension: 0.4,
+										fill: true,
+									},
+								],
+							},
+							options: {
+								responsive: true,
+								maintainAspectRatio: false,
+								plugins: {
+									legend: {
+										position: "top",
+									},
+									title: {
+										display: true,
+										text: "Andamento Ricavi",
+									},
+								},
+								scales: {
+									y: {
+										beginAtZero: true,
+										ticks: {
+											callback: function (value) {
+												return "€ " + value.toFixed(2);
+											},
+										},
+									},
+								},
+							},
+						});
+					}
+				} catch (error) {
+					console.error("Errore nel recupero dello storico ricavi:", error);
+					document.getElementById("ricaviTableBody").innerHTML =
+						'<tr><td colspan="3" class="text-center text-danger">Errore nel caricamento dei dati</td></tr>';
+
+					const ctx = document.getElementById("ricaviChart").getContext("2d");
+					new Chart(ctx, {
+						type: "line",
+						data: {
+							labels: [],
+							datasets: [
+								{
+									label: "Ricavi Giornalieri",
+									data: [],
+									borderColor: "#3f51b5",
+									backgroundColor: "rgba(63, 81, 181, 0.1)",
+									tension: 0.4,
+									fill: true,
+								},
+							],
+						},
+						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							plugins: {
+								legend: {
+									position: "top",
+								},
+								title: {
+									display: true,
+									text: "Errore nel caricamento dei dati",
+								},
+							},
+						},
+					});
+				}
+			}
+
+			document.addEventListener("DOMContentLoaded", () => {
+				fetchRicaviMacchinetta();
+				fetchStoricoRicavi();
+			});
+		</script>
+	</body>
+</html>
