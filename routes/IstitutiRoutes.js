@@ -36,38 +36,44 @@ router.get('/', (req, res) => {
 
 });
 
-router.get('/:id/macchinette', (req, res) => {
+router.get('/:id/macchinette', async (req, res) => {
     const url = `${process.env.API_URL}/istituti/${req.params.id}/macchinette`;
     const istitutoUrl = `${process.env.API_URL}/istituti/${req.params.id}`;
 
-    axios.get(istitutoUrl)
-        .then(response => {
-            const istituto = response.data;
-            axios.get(url)
-                .then(response => {
-                    res.render('istituto_details', { 
-                        istituto: istituto, 
-                        macchinette: response.data 
-                    });
-                })
-                .catch(error => {
-                    // Se l'errore è 404, renderizza la pagina con un array vuoto di macchinette
-                    if (error.response && error.response.status === 404) {
-                        res.render('istituto_details', { 
-                            istituto: istituto, 
-                            macchinette: [] 
-                        });
-                    } else {
-                        // Per altri errori, mostra l'errore
-                        res.status(500).json({ error: error.message });
-                    }
-                });
-        })
-        .catch(error => {
-            res.status(500).json({ error: error.message });
+    try {
+        // Prima otteniamo i dati dell'istituto
+        const istitutoRes = await axios.get(istitutoUrl);
+        
+        try {
+            // Se abbiamo l'istituto, otteniamo le macchinette
+            const macchinetteRes = await axios.get(url);
+            
+            res.render('istituto_details', { 
+                istituto: istitutoRes.data, 
+                macchinette: macchinetteRes.data,
+                apiUrl: process.env.API_URL
+            });
+            
+        } catch (error) {
+            // Errore nel caricamento delle macchinette
+            res.render('istituto_details', { 
+                istituto: istitutoRes.data,
+                macchinette: [],
+                apiUrl: process.env.API_URL,
+                error: 'Errore nel caricamento delle macchinette'
+            });
+        }
+    } catch (error) {
+        // Errore nel caricamento dell'istituto
+        console.error('Errore:', error);
+        res.render('istituto_details', { 
+            istituto: {},
+            macchinette: [],
+            apiUrl: process.env.API_URL,
+            error: 'Errore nel caricamento dei dati dell\'istituto'
         });
+    }
 });
-
 router.post('/:id/macchinette', (req, res) => {
     const baseUrl = `${process.env.API_URL}/istituti/${req.params.id}/macchinette`;
     
@@ -98,6 +104,18 @@ router.post('/:id/macchinette', (req, res) => {
                 res.redirect(`/istituti/${req.params.id}/macchinette?error=Errore di connessione`);
             }
         });
+});
+
+router.get('/:id/ricavi', async (req, res) => {
+    try {
+        const ricaviRes = await axios.get(
+            `${process.env.API_URL}/ricavi/totale/istituto/${req.params.id}`
+        );
+        res.json(ricaviRes.data);
+    } catch (error) {
+        console.error('Errore nel recupero dei ricavi:', error);
+        res.status(500).json({ error: 'Errore nel recupero dei ricavi' });
+    }
 });
 
 module.exports = router;
