@@ -54,8 +54,11 @@
 			}
 			.chart-container {
 				position: relative;
-				height: 400px;
+				height: 300px;
 				width: 100%;
+				padding: 16px;
+				border-radius: 8px;
+				background-color: #ffffff;
 			}
 		</style>
 	</head>
@@ -88,12 +91,11 @@
 								data-bs-toggle="modal"
 								data-bs-target="#deleteMacchinaModal"
 							>
-								<i class="material-icons">delete</i> Elimina
+								<i class="material-icons d-flex align-items-center justify-content-center">delete</i>
 							</button>
 						</div>
 					</div>
 
-					<!-- Card dei ricavi totali -->
 					<div class="row mb-4">
 						<div class="col-md-6">
 							<div class="card stats-card">
@@ -363,22 +365,51 @@
 								plugins: {
 									legend: {
 										position: "top",
+										labels: {
+											font: {
+												family: "'Roboto', sans-serif",
+												size: 12
+											},
+											padding: 16
+										}
 									},
 									title: {
 										display: true,
 										text: "Andamento Ricavi",
-									},
+										font: {
+											family: "'Roboto', sans-serif",
+											size: 16,
+											weight: 500
+										},
+										padding: 16
+									}
 								},
 								scales: {
 									y: {
 										beginAtZero: true,
+										grid: {
+											color: 'rgba(0, 0, 0, 0.05)'
+										},
 										ticks: {
+											font: {
+												family: "'Roboto', sans-serif"
+											},
 											callback: function (value) {
 												return "€ " + value.toFixed(2);
-											},
-										},
+											}
+										}
 									},
-								},
+									x: {
+										grid: {
+											display: false
+										},
+										ticks: {
+											font: {
+												family: "'Roboto', sans-serif"
+											}
+										}
+									}
+								}
 							},
 						});
 					}

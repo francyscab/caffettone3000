@@ -98,7 +98,7 @@
             <div class="d-flex align-items-center">
                 <i class="material-icons" style="font-size: 2.5rem; color: #4CAF50; margin-right: 15px;">euro</i>
                 <div>
-                    <h3 class="mb-0" style="color: #4CAF50;" id="totaleRicavi">€ 0.00</h3>
+                    <h3 class="mb-0" style="color: #4CAF50;" id="totaleRicavi">0.00</h3>
                     <small class="text-muted">Ricavi Totali</small>
                 </div>
             </div>
@@ -203,10 +203,10 @@ async function fetchRicaviTotali() {
         const data = await response.json();
         const totale = data || 0;
         
-        document.getElementById('totaleRicavi').textContent = `€ ${totale.toFixed(2)}`;
+        document.getElementById('totaleRicavi').textContent = `${totale.toFixed(2)}`;
     } catch (error) {
         console.error('Errore nel recupero dei ricavi:', error);
-        document.getElementById('totaleRicavi').textContent = '€ 0.00';
+        document.getElementById('totaleRicavi').textContent = '0.00';
     }
 }
 
