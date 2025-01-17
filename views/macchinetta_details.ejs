@@ -60,6 +60,32 @@
 				border-radius: 8px;
 				background-color: #ffffff;
 			}
+			.btn-primary {
+				background-color: #2196F3; /* Blu Material */
+				color: #ffffff; /* Testo bianco */
+				border: none;
+				padding: 10px 20px; /* Padding ridotto per un aspetto più elegante */
+				border-radius: 25px; /* Angoli arrotondati */
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s ease;
+			}
+			.btn-primary:hover {
+				background-color: #1976D2; /* Blu scuro al passaggio del mouse */
+				transform: translateY(-2px);
+				box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+			}
+			.btn-secondary {
+				background-color: #f5f5f5; /* Sfondo chiaro per il pulsante secondario */
+				color: #2196F3; /* Colore blu per il testo */
+				border: 1px solid #2196F3; /* Bordo blu */
+				padding: 10px 20px; /* Padding ridotto */
+				border-radius: 25px; /* Angoli arrotondati */
+				transition: all 0.3s ease;
+			}
+			.btn-secondary:hover {
+				background-color: #2196F3; /* Blu Material al passaggio del mouse */
+				color: #ffffff; /* Testo bianco */
+			}
 		</style>
 	</head>
 	<body>
@@ -85,6 +111,7 @@
 							>
 								<%= macchinetta.status %>
 							</span>
+							<% if (user.roles.includes('amministratore')) { %>
 							<button
 								type="button"
 								class="btn btn-danger"
@@ -93,6 +120,7 @@
 							>
 								<i class="material-icons d-flex align-items-center justify-content-center">delete</i>
 							</button>
+							<% } %>
 						</div>
 					</div>
 
@@ -107,7 +135,7 @@
 						</div>
 					</div>
 
-					<!-- Informazioni base -->
+				
 					<div class="row">
 						<div class="col-md-6">
 							<p>
@@ -211,7 +239,7 @@
 							Annulla
 						</button>
 						<form
-							action="/istituti/<%= istituto.id_istituto %>/macchinette/<%= macchinetta.id_macchinetta %>/delete"
+							action="/macchinette/<%= istituto.id_istituto %>/macchinette/<%= macchinetta.id_macchinetta %>/delete"
 							method="POST"
 							style="display: inline"
 						>
@@ -232,7 +260,7 @@
 			async function fetchRicaviMacchinetta() {
 				try {
 					const response = await fetch(
-						"/istituti/macchinetta/<%= macchinetta.id_macchinetta %>/ricavi"
+						"/macchinette/macchinetta/<%= macchinetta.id_macchinetta %>/ricavi"
 					);
 					if (response.status === 404) {
 						document.getElementById("totaleRicavi").textContent = "€ 0.00";
@@ -254,7 +282,7 @@
 			async function fetchStoricoRicavi() {
 				try {
 					const response = await fetch(
-						"/istituti/macchinetta/<%= macchinetta.id_macchinetta %>/storico-ricavi"
+						"/macchinette/macchinetta/<%= macchinetta.id_macchinetta %>/storico-ricavi"
 					);
 					let ricavi = [];
 
