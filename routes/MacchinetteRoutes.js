@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
+const createAuthenticatedAxiosInstance = require('../utils/axiosConfig');
+
 
 router.get('/:idIstituto/macchinetta/:idMacchinetta', async (req, res) => {
     const { idIstituto, idMacchinetta } = req.params;
     const istitutoUrl = `${process.env.API_URL}/istituti/${idIstituto}`;
     const macchinettaUrl = `${process.env.API_URL}/macchinette/${idMacchinetta}`;
     const userRoles = req.user.roles;
-
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
     try {
         const [istitutoRes, macchinettaRes] = await Promise.all([
-            axios.get(istitutoUrl),
-            axios.get(macchinettaUrl)
+            axiosInstance.get(istitutoUrl),
+            axiosInstance.get(macchinettaUrl)
         ]);
 
         res.render('macchinetta_details', {
@@ -30,10 +31,10 @@ router.get('/:idIstituto/macchinetta/:idMacchinetta', async (req, res) => {
 });
 
 router.get('/macchinetta/:id/ricavi', async (req, res) => {
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
+    const url = `${process.env.API_URL}/ricavi/totale/macchinetta/${req.params.id}`;
     try {
-        const response = await axios.get(
-            `${process.env.API_URL}/ricavi/totale/macchinetta/${req.params.id}`
-        );
+        const response = await axiosInstance.get(url);
         res.json(response.data);
     } catch (error) {
         console.error('Errore nel recupero dei ricavi:', error);
@@ -41,12 +42,11 @@ router.get('/macchinetta/:id/ricavi', async (req, res) => {
     }
 });
 
-// Aggiungere questa rotta in IstitutiRoutes.js
 router.get('/macchinetta/:id/storico-ricavi', async (req, res) => {
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
+    const url = `${process.env.API_URL}/ricavi/macchinetta/${req.params.id}`;
     try {
-        const response = await axios.get(
-            `${process.env.API_URL}/ricavi/macchinetta/${req.params.id}`
-        );
+        const response = await axiosInstance.get(url);
         res.json(response.data);
     } catch (error) {
         console.error('Errore nel recupero dello storico ricavi:', error);
@@ -56,18 +56,15 @@ router.get('/macchinetta/:id/storico-ricavi', async (req, res) => {
 
 router.post('/:idIstituto/macchinette/:idMacchinetta/delete', async (req, res) => {
     try {
-        await axios.delete(`${process.env.API_URL}/macchinette/${req.params.idMacchinetta}`);
+        const axiosInstance = createAuthenticatedAxiosInstance(req);
+        const url = `${process.env.API_URL}/macchinette/${req.params.idMacchinetta}`;
+        await axiosInstance.delete(url);
         res.redirect(`/istituti/${req.params.idIstituto}/macchinette`);
     } catch (error) {
         console.error('Errore nell\'eliminazione della macchinetta:', error);
         if (error.response) {
-            switch (error.response.status) {
-                case 404:
-                    res.render('error', { error: { message: 'Macchinetta non trovata' } });
-                    break;
-                default:
-                    res.render('error', { error: { message: 'Errore durante l\'eliminazione della macchinetta' } });
-            }
+            const messaggioErrore = error.response.data.error;
+            res.render('error', { error: messaggioErrore });
         } else {
             res.render('error', { error: { message: 'Errore di connessione al server' } });
         }
