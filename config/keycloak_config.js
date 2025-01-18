@@ -1,5 +1,12 @@
 const session = require('express-session');
 const Keycloak = require('keycloak-connect');
+require('dotenv').config();
+
+if (!process.env.KEYCLOAK_SECRET) {
+    throw new Error('KEYCLOAK_SECRET environment variable is not set');
+}
+
+
 
 const keycloakConfig = {
     "realm": "amministrazione-realm",
@@ -7,7 +14,7 @@ const keycloakConfig = {
     "ssl-required": "external",
     "resource": "my-amministrativo",
     "credentials": {
-        "secret": "574c8f1f-eea9-4658-a5b8-283384e764d4"
+        "secret": process.env.KEYCLOAK_SECRET
     },
     "confidential-port": 0,
     "verify-token-audience": false,
