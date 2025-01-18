@@ -1,106 +1,532 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Istituti - Caffettone 3000</title>
-    <link href="/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
-        }
-        .container {
-            margin-top: 40px;
-        }
-        h1 {
-            font-weight: 500;
-            color: #3f51b5;
-            margin-bottom: 30px;
-        }
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-            background-color: #ffffff;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-        }
-        .card-title {
-            color: #3f51b5;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        .card-text {
-            color: #757575;
-            margin-bottom: 10px;
-        }
-        .material-icons {
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-        .btn-outline-danger {
-            color: #f44336;
-            border-color: #f44336;
-        }
-        .btn-outline-danger:hover {
-            background-color: #f44336;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div class="d-flex flex-column align-items-start">
-            <h1>👋 Benvenuto, <%= user.username %></h1>
-            <span class="badge bg-primary" style="font-size: 1rem; margin-top: 10px;"><%= user.roles.includes('amministratore') ? 'Amministratore' : 'Impiegato' %></span>
-        </div>
-        <a href="/auth/logout" class="btn btn-outline-danger">
-            <i class="material-icons">exit_to_app</i> Logout
-        </a>
-    </div>
-    <hr class="my-4">
-    <h1>Istituti</h1>
-    <form method="GET" action="/istituti" class="mb-4">
-        <div class="input-group">
-            <select name="citta" class="form-select">
-                <option value="">Tutte le città</option>
-                <% const cittaUniche = [...new Set(istituti.map(i => i.citta))]; %>
-                <% cittaUniche.forEach(function(citta) { %>
-                    <option value="<%= citta %>"><%= citta %></option>
-                <% }); %>
-            </select>
-            <button type="submit" class="btn btn-primary">Filtra</button>
-        </div>
-    </form>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <% istituti.forEach(function(istituto) { %>
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="material-icons">school</i> <%= istituto.nome %>
-                        </h5>
-                        <p class="card-text">
-                            <i class="material-icons">location_on</i> Indirizzo: <%= istituto.indirizzo %>
-                        </p>
-                        <p class="card-text">
-                            <i class="material-icons">location_city</i> Città: <%= istituto.citta %>
-                        </p>
-                        <p class="card-text">
-                            <i class="material-icons">calendar_today</i> Data Creazione: <%= new Date(istituto.data_creazione).toLocaleDateString() %>
-                        </p>
-                        <a href="<%= istituto.detailLink %>" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
-        <% }); %>
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html> 
+	<head>
+		<title>Istituti - Caffettone 3000</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--primary-bg: #ffffff;
+				--secondary-bg: #f9fafb;
+				--accent-color: #0ea5e9;
+				--text-primary: #0f172a;
+				--text-secondary: #64748b;
+				--border-color: #e2e8f0;
+				--hover-bg: #f1f5f9;
+			}
+
+			body {
+				font-family: "Plus Jakarta Sans", sans-serif;
+				background-color: var(--secondary-bg);
+				color: var(--text-primary);
+				line-height: 1.6;
+			}
+
+			.navbar {
+				background: rgba(255, 255, 255, 0.8);
+				backdrop-filter: blur(8px);
+				border-bottom: 1px solid var(--border-color);
+				padding: 1rem 0;
+			}
+
+			.navbar-brand {
+				font-weight: 600;
+				color: var(--text-primary);
+				font-size: 1.25rem;
+			}
+
+			.main-container {
+				max-width: 1400px;
+				margin: 0 auto;
+				padding: 2rem 1.5rem;
+			}
+
+			.page-header {
+				margin-bottom: 3rem;
+			}
+
+			.welcome-title {
+				font-size: 2rem;
+				font-weight: 600;
+				margin-bottom: 0.5rem;
+				color: var(--text-primary);
+			}
+
+			.user-role {
+				display: inline-flex;
+				align-items: center;
+				padding: 0.5rem 1rem;
+				border-radius: 2rem;
+				font-size: 0.875rem;
+				font-weight: 500;
+				border: none;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+
+			.role-admin {
+				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+				color: white;
+				box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+			}
+
+			.role-employee {
+				background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+				color: white;
+				box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+			}
+
+			.role-admin svg,
+			.role-employee svg {
+				stroke: white;
+			}
+
+			.btn-logout {
+				padding: 0.5rem 1.25rem;
+				color: #ef4444;
+				background: transparent;
+				border: 1px solid #fecaca;
+				border-radius: 0.5rem;
+				font-size: 0.875rem;
+				font-weight: 500;
+				transition: all 0.2s ease;
+			}
+
+			.btn-logout:hover {
+				background: #fef2f2;
+				color: #dc2626;
+			}
+
+			.filters-section {
+				background: var(--primary-bg);
+				border-radius: 1rem;
+				padding: 1.5rem;
+				margin-bottom: 2.5rem;
+				border: 1px solid var(--border-color);
+			}
+
+			.filters-title {
+				font-size: 0.875rem;
+				font-weight: 600;
+				color: var(--text-secondary);
+				margin-bottom: 1rem;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+
+			.form-select {
+				border: 1px solid var(--border-color);
+				border-radius: 0.5rem;
+				padding: 0.625rem 1rem;
+				font-size: 0.925rem;
+				color: var(--text-primary);
+				background-color: var(--primary-bg);
+			}
+
+			.form-select:focus {
+				border-color: var(--accent-color);
+				box-shadow: 0 0 0 1px var(--accent-color);
+			}
+
+			.btn-filter {
+				background-color: var(--accent-color);
+				border: none;
+				padding: 0.625rem 1.25rem;
+				border-radius: 0.5rem;
+				font-weight: 500;
+				transition: all 0.2s ease;
+			}
+
+			.btn-filter:hover {
+				opacity: 0.9;
+				transform: translateY(-1px);
+			}
+
+			.btn-addInstitute {
+				background-color: green;
+				color: white;
+				border: none;
+				padding: 0.625rem 1.25rem;
+				border-radius: 0.5rem;
+				font-weight: 500;
+				transition: all 0.2s ease;
+			}
+
+			.btn-addInstitute:hover {
+				opacity: 0.9;
+				transform: translateY(-1px);
+			}
+
+			.institutes-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+				gap: 1.5rem;
+			}
+
+			.institute-card {
+				background: var(--primary-bg);
+				border: 1px solid var(--border-color);
+				border-radius: 1rem;
+				padding: 1.5rem;
+				transition: all 0.2s ease;
+				position: relative;
+				cursor: pointer;
+			}
+
+			.institute-card:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+				border-color: var(--accent-color);
+			}
+
+			.institute-name {
+				font-size: 1.125rem;
+				font-weight: 600;
+				color: var(--text-primary);
+				margin-bottom: 1rem;
+			}
+
+			.institute-detail {
+				font-size: 0.925rem;
+				color: var(--text-secondary);
+				margin-bottom: 0.75rem;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			.institute-detail svg {
+				width: 1rem;
+				height: 1rem;
+				flex-shrink: 0;
+			}
+
+			.section-heading {
+				font-size: 1.5rem;
+				font-weight: 600;
+				margin-bottom: 1.5rem;
+				color: var(--text-primary);
+			}
+
+			@media (max-width: 768px) {
+				.main-container {
+					padding: 1rem;
+				}
+
+				.welcome-title {
+					font-size: 1.75rem;
+				}
+
+				.institutes-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+			.modal-content {
+				border-radius: 1rem;
+				border: none;
+				box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+			}
+
+			.modal-header {
+				border-bottom: 1px solid var(--border-color);
+				padding: 1.5rem;
+			}
+
+			.modal-footer {
+				border-top: 1px solid var(--border-color);
+				padding: 1.5rem;
+			}
+
+			.modal-body {
+				padding: 1.5rem;
+			}
+
+			.form-label {
+				font-weight: 500;
+				color: var(--text-primary);
+				margin-bottom: 0.5rem;
+			}
+
+			.form-control {
+				border: 1px solid var(--border-color);
+				border-radius: 0.5rem;
+				padding: 0.625rem 1rem;
+				font-size: 0.925rem;
+				color: var(--text-primary);
+			}
+
+			.form-control:focus {
+				border-color: var(--accent-color);
+				box-shadow: 0 0 0 1px var(--accent-color);
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar sticky-top">
+			<div class="container-fluid px-4">
+				<span class="navbar-brand">Caffettone 3000</span>
+				<a href="/auth/logout" class="btn-logout text-decoration-none"
+					>Logout</a
+				>
+			</div>
+		</nav>
+
+		<main class="main-container">
+			<header class="page-header">
+				<h1 class="welcome-title">Benvenuto, <%= user.username %></h1>
+				<% const isAdmin = user.roles.includes('amministratore'); const
+				roleClass = isAdmin ? 'role-admin' : 'role-employee'; %>
+				<span class="user-role <%= roleClass %>">
+					<% if (isAdmin) { %>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						width="16"
+						height="16"
+						class="me-2"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+						/>
+					</svg>
+					<% } else { %>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						width="16"
+						height="16"
+						class="me-2"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+						/>
+					</svg>
+					<% } %> <%= isAdmin ? 'Amministratore' : 'Impiegato' %>
+				</span>
+			</header>
+
+			<section class="filters-section">
+				<h2 class="filters-title">Filtri</h2>
+				<form method="GET" action="/istituti">
+					<div class="row align-items-end g-3">
+						<div class="col-md-6">
+							<select name="citta" class="form-select">
+								<option value="">Tutte le città</option>
+								<% const cittaUniche = [...new Set(istituti.map(i => i.citta))];
+								%> <% cittaUniche.forEach(function(citta) { %>
+								<option value="<%= citta %>"><%= citta %></option>
+								<% }); %>
+							</select>
+						</div>
+						<div class="col-md-auto">
+							<button type="submit" class="btn btn-filter btn-primary">
+								Applica filtri
+							</button>
+						</div>
+						<% if (user.roles.includes('amministratore')) { %>
+						<div class="col-md-auto">
+							<button
+								type="button"
+								class="btn btn-addInstitute"
+								data-bs-toggle="modal"
+								data-bs-target="#newInstituteModal"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									width="16"
+									height="16"
+									class="me-2"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+									/>
+								</svg>
+								Nuovo Istituto
+							</button>
+						</div>
+						<% } %>
+					</div>
+				</form>
+			</section>
+
+			<h2 class="section-heading">I tuoi istituti</h2>
+
+			<div class="institutes-grid">
+				<% istituti.forEach(function(istituto) { %>
+				<article
+					class="institute-card"
+					onclick="window.location.href='<%= istituto.detailLink %>'"
+				>
+					<h3 class="institute-name"><%= istituto.nome %></h3>
+
+					<div class="institute-detail">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+							/>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+							/>
+						</svg>
+						<%= istituto.indirizzo %>
+					</div>
+
+					<div class="institute-detail">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+							/>
+						</svg>
+						<%= istituto.citta %>
+					</div>
+
+					<div class="institute-detail">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+							/>
+						</svg>
+						<%= new Date(istituto.data_creazione).toLocaleDateString() %>
+					</div>
+				</article>
+				<% }); %>
+			</div>
+		</main>
+
+		<div
+			class="modal fade"
+			id="newInstituteModal"
+			tabindex="-1"
+			aria-labelledby="newInstituteModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="newInstituteModalLabel">
+							Aggiungi Nuovo Istituto
+						</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<form action="/istituti/addistituto" method="POST">
+						<div class="modal-body">
+							<div class="mb-3">
+								<label for="nome" class="form-label">Nome Istituto</label>
+								<input
+									type="text"
+									class="form-control"
+									id="nome"
+									name="nome"
+									required
+								/>
+							</div>
+							<div class="mb-3">
+								<label for="indirizzo" class="form-label">Indirizzo</label>
+								<input
+									type="text"
+									class="form-control"
+									id="indirizzo"
+									name="indirizzo"
+									required
+								/>
+							</div>
+							<div class="mb-3">
+								<label for="citta" class="form-label">Città</label>
+								<input
+									type="text"
+									class="form-control"
+									id="citta"
+									name="citta"
+									required
+								/>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-bs-dismiss="modal"
+							>
+								Annulla
+							</button>
+							<button type="submit" class="btn btn-success">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									width="16"
+									height="16"
+									class="me-2"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+									/>
+								</svg>
+								Crea Istituto
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

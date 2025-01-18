@@ -113,6 +113,21 @@ router.get('/:id/ricavi', async (req, res) => {
     }
 });
 
+router.post('/addistituto', (req, res) => {
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
+    const url = `${process.env.API_URL}/istituti`;
+
+    axiosInstance.post(url, req.body)
+        .then(() => {
+            res.redirect('/istituti');
+        })
+        .catch(error => {
+            console.error('Errore:', error);
+            res.status(500).json({ error: 'Errore nel salvataggio dell\'istituto' });
+        });
+
+});
+
 
 
 module.exports = router;
