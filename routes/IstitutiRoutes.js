@@ -128,6 +128,25 @@ router.post('/addistituto', (req, res) => {
 
 });
 
+router.delete('/:id/delete', async (req, res) => {
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
+    const url = `${process.env.API_URL}/istituti/${req.params.id}`;
 
+    try {
+      
+        await axiosInstance.delete(url);
+        res.status(200).json({ message: 'Istituto eliminato con successo' });
+    } catch (error) {
+        console.error('Errore durante l\'eliminazione dell\'istituto:', error);
+        
+        if (error.response) {
+            return res.status(error.response.status).json({ 
+                error: error.response.data.error || 'Errore durante l\'eliminazione dell\'istituto' 
+            });
+        }
+        
+        res.status(500).json({ error: 'Errore di connessione al server' });
+    }
+});
 
 module.exports = router;

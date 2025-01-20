@@ -45,6 +45,7 @@
 				max-width: 1400px;
 				margin: 0 auto;
 				padding: 2rem 1.5rem;
+				position: relative;
 			}
 
 			.page-header {
@@ -213,6 +214,30 @@
 				color: var(--text-primary);
 			}
 
+			.revenue-card {
+				position: absolute;
+				top: 2rem;
+				right: 1.5rem;
+				background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+				color: white;
+				padding: 1.5rem;
+				border-radius: 1rem;
+				box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+				min-width: 200px;
+			}
+
+			.revenue-amount {
+				font-size: 1.75rem;
+				font-weight: 600;
+				margin: 0.5rem 0;
+			}
+
+			.revenue-label {
+				font-size: 0.875rem;
+				opacity: 0.9;
+				margin: 0;
+			}
+
 			@media (max-width: 768px) {
 				.main-container {
 					padding: 1rem;
@@ -263,6 +288,26 @@
 			.form-control:focus {
 				border-color: var(--accent-color);
 				box-shadow: 0 0 0 1px var(--accent-color);
+			}
+
+			.empty-state {
+				background: var(--primary-bg);
+				border: 1px solid var(--border-color);
+				border-radius: 1rem;
+				padding: 2rem;
+			}
+
+			.empty-state svg {
+				color: var(--text-secondary);
+			}
+
+			.empty-state h3 {
+				color: var(--text-secondary);
+				font-weight: 500;
+			}
+
+			.empty-state .btn-addInstitute {
+				padding: 0.75rem 1.5rem;
 			}
 		</style>
 	</head>
@@ -320,6 +365,15 @@
 				</span>
 			</header>
 
+			<div class="filters-section mb-4">
+				<div class="d-flex align-items-center">
+					<div>
+						<h3 class="filters-title mb-2">Ricavi Totali</h3>
+						<h4 class="revenue-amount" id="totaleRicavi">€ 0.00</h4>
+					</div>
+				</div>
+			</div>
+
 			<section class="filters-section">
 				<h2 class="filters-title">Filtri</h2>
 				<form method="GET" action="/istituti">
@@ -372,73 +426,85 @@
 
 			<h2 class="section-heading">I tuoi istituti</h2>
 
-			<div class="institutes-grid">
-				<% istituti.forEach(function(istituto) { %>
-				<article
-					class="institute-card"
-					onclick="window.location.href='<%= istituto.detailLink %>'"
-				>
-					<h3 class="institute-name"><%= istituto.nome %></h3>
+			<% if (istituti && istituti.length > 0) { %>
+				<div class="institutes-grid">
+					<% istituti.forEach(function(istituto) { %>
+					<article
+						class="institute-card"
+						onclick="window.location.href='<%= istituto.detailLink %>'"
+					>
+						<h3 class="institute-name"><%= istituto.nome %></h3>
 
-					<div class="institute-detail">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-							/>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-							/>
-						</svg>
-						<%= istituto.indirizzo %>
-					</div>
+						<div class="institute-detail">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+								/>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+								/>
+							</svg>
+							<%= istituto.indirizzo %>
+						</div>
 
-					<div class="institute-detail">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-							/>
-						</svg>
-						<%= istituto.citta %>
-					</div>
+						<div class="institute-detail">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+								/>
+							</svg>
+							<%= istituto.citta %>
+						</div>
 
-					<div class="institute-detail">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-							/>
-						</svg>
-						<%= new Date(istituto.data_creazione).toLocaleDateString() %>
-					</div>
-				</article>
-				<% }); %>
-			</div>
+						<div class="institute-detail">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+								/>
+							</svg>
+							<%= new Date(istituto.data_creazione).toLocaleDateString() %>
+						</div>
+					</article>
+					<% }); %>
+				</div>
+			<% } else { %>
+				<div class="empty-state text-center py-5">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48" class="mb-3 text-secondary mx-auto d-block">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+					</svg>
+					<h3 class="h5 mb-3 text-secondary">Nessun istituto disponibile</h3>
+					<% if (user.roles.includes('impiegato')) { %>
+						<p class="text-muted">Contatta un amministratore per aggiungere nuovi istituti.</p>
+					<% } %>
+				</div>
+			<% } %>
 		</main>
 
 		<div
@@ -528,5 +594,22 @@
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script>
+		async function fetchRicaviTotali() {
+			try {
+				const response = await fetch('/ricavi/totale');
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const data = await response.json();
+				document.getElementById('totaleRicavi').textContent = `€ ${data.toFixed(2)}`;
+			} catch (error) {
+				console.error('Errore nel recupero dei ricavi:', error);
+				document.getElementById('totaleRicavi').textContent = '€ 0.00';
+			}
+		}
+
+		document.addEventListener('DOMContentLoaded', fetchRicaviTotali);
+		</script>
 	</body>
 </html>

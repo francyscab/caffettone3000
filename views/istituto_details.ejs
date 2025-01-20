@@ -74,6 +74,22 @@
         .d-flex.justify-content-between.align-items-center.mb-4 {
             margin-top: 40px;
         }
+        .empty-state {
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+        .empty-state svg {
+            color: var(--text-secondary);
+        }
+        .empty-state h3 {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .empty-state .btn-addInstitute {
+            padding: 0.75rem 1.5rem;
+        }
     </style>
 </head>
 <body>
@@ -85,10 +101,17 @@
     
     <div class="card mb-4">
         <div class="card-body">
-            <h1>
-                <i class="material-icons">school</i>
-                <%= istituto.nome %>
-            </h1>
+            <div class="d-flex justify-content-between align-items-start">
+                <h1>
+                    <i class="material-icons">school</i>
+                    <%= istituto.nome %>
+                </h1>
+                <% if (user.roles.includes('amministratore')) { %>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteIstitutoModal">
+                        <i class="material-icons">delete</i> Elimina Istituto
+                    </button>
+                <% } %>
+            </div>
             <p class="card-text">
                 <i class="material-icons">location_on</i> Indirizzo: <%= istituto.indirizzo %>
             </p>
@@ -118,55 +141,67 @@
         <% } %>
     </div>
 
-    <%
-        // Raggruppa le macchinette per piano
-        const macchinettePerPiano = macchinette.reduce((acc, macchinetta) => {
-            if (!acc[macchinetta.piano]) {
-                acc[macchinetta.piano] = [];
-            }
-            acc[macchinetta.piano].push(macchinetta);
-            return acc;
-        }, {});
-    %>
+    <% if (macchinette && macchinette.length > 0) { %>
+        <%
+            // Raggruppa le macchinette per piano
+            const macchinettePerPiano = macchinette.reduce((acc, macchinetta) => {
+                if (!acc[macchinetta.piano]) {
+                    acc[macchinetta.piano] = [];
+                }
+                acc[macchinetta.piano].push(macchinetta);
+                return acc;
+            }, {});
+        %>
 
-    <% Object.entries(macchinettePerPiano).sort((a, b) => a[0].localeCompare(b[0])).forEach(([piano, macchinettePiano]) => { %>
-        <div class="mb-4">
-            <h3 class="mb-3">Piano <%= piano %></h3>
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <% macchinettePiano.forEach(function(macchinetta) { %>
-                    <div class="col">
-                        <a href="/macchinette/<%= istituto.id_istituto %>/macchinetta/<%= macchinetta.id_macchinetta %>" 
-                           class="text-decoration-none">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="material-icons">local_cafe</i>
-                                        <span>Macchinetta <%= macchinetta.id_macchinetta %></span>
-                                    </h5>
-                                    <p class="card-text">
-                                        <i class="material-icons">info</i>
-                                        <span>Stato: 
-                                            <span class="badge ms-1 <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %>">
-                                                <%= macchinetta.status %>
+        <% Object.entries(macchinettePerPiano).sort((a, b) => a[0].localeCompare(b[0])).forEach(([piano, macchinettePiano]) => { %>
+            <div class="mb-4">
+                <h3 class="mb-3">Piano <%= piano %></h3>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <% macchinettePiano.forEach(function(macchinetta) { %>
+                        <div class="col">
+                            <a href="/macchinette/<%= istituto.id_istituto %>/macchinetta/<%= macchinetta.id_macchinetta %>" 
+                               class="text-decoration-none">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="material-icons">local_cafe</i>
+                                            <span>Macchinetta <%= macchinetta.id_macchinetta %></span>
+                                        </h5>
+                                        <p class="card-text">
+                                            <i class="material-icons">info</i>
+                                            <span>Stato: 
+                                                <span class="badge ms-1 <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %>">
+                                                    <%= macchinetta.status %>
+                                                </span>
                                             </span>
-                                        </span>
-                                    </p>
-                                    <p class="card-text">
-                                        <i class="material-icons">event</i>
-                                        <span>Ultima Manutenzione: 
-                                            <%= macchinetta.data_ultima_manutenzione ? 
-                                                new Date(macchinetta.data_ultima_manutenzione).toLocaleDateString() : 
-                                                'mai' %>
-                                        </span>
-                                    </p>
+                                        </p>
+                                        <p class="card-text">
+                                            <i class="material-icons">event</i>
+                                            <span>Ultima Manutenzione: 
+                                                <%= macchinetta.data_ultima_manutenzione ? 
+                                                    new Date(macchinetta.data_ultima_manutenzione).toLocaleDateString() : 
+                                                    'mai' %>
+                                            </span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                <% }); %>
+                            </a>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="material-icons" style="font-size: 48px; color: #666; display: block; margin-bottom: 1rem;">local_cafe</i>
+                <h3 class="h5 mb-3 text-secondary">Nessuna macchinetta presente</h3>
+                <% if (user.roles.includes('impiegato')) { %>
+                    <p class="text-muted mb-0">Contatta un amministratore per aggiungere nuove macchinette.</p>
+                <% } %>
             </div>
         </div>
-    <% }); %>
+    <% } %>
 </div>
 
 <div class="modal fade" id="nuovaMacchinaModal" tabindex="-1" aria-labelledby="nuovaMacchinaModalLabel" aria-hidden="true">
@@ -196,6 +231,45 @@
     </div>
 </div>
 
+<!-- Modal Conferma Eliminazione -->
+<div class="modal fade" id="deleteIstitutoModal" tabindex="-1" aria-labelledby="deleteIstitutoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteIstitutoModalLabel">Conferma Eliminazione</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Sei sicuro di voler eliminare l'istituto "<%= istituto.nome %>"? Questa azione non può essere annullata.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-danger" onclick="deleteIstituto()">
+                    <i class="material-icons">delete</i> Elimina
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Errore -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Errore</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="errorModalBody">
+                Si è verificato un errore durante l'eliminazione dell'istituto.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Chiudi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -217,6 +291,33 @@ async function fetchRicaviTotali() {
 }
 
 document.addEventListener('DOMContentLoaded', fetchRicaviTotali);
+
+async function deleteIstituto() {
+    try {
+        const response = await fetch('/istituti/<%= istituto.id_istituto %>/delete', {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Errore durante l\'eliminazione');
+        }
+
+        // Redirect alla lista degli istituti dopo l'eliminazione
+        window.location.href = '/istituti';
+    } catch (error) {
+        console.error('Errore durante l\'eliminazione:', error);
+        
+        // Chiudi il modal di conferma
+        const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteIstitutoModal'));
+        deleteModal.hide();
+        
+        // Mostra il modal di errore
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        document.getElementById('errorModalBody').textContent = error.message;
+        errorModal.show();
+    }
+}
 </script>
 </body>
 </html>

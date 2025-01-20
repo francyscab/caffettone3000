@@ -1,0 +1,190 @@
+<!-- Stili condivisi per tutte le viste -->
+<style>
+:root {
+    /* Palette colori principale */
+    --primary: #2D3436;
+    --secondary: #636E72;
+    --accent: #00B894;
+    --background: #F5F6FA;
+    --surface: #FFFFFF;
+    --error: #D63031;
+    --success: #00B894;
+    --warning: #FDCB6E;
+    
+    /* Neumorphism shadows */
+    --nm-shadow-small: 6px 6px 12px #D1D9E6, -6px -6px 12px #ffffff;
+    --nm-shadow: 12px 12px 24px #D1D9E6, -12px -12px 24px #ffffff;
+    --nm-inset: inset 6px 6px 12px #D1D9E6, inset -6px -6px 12px #ffffff;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    /* Border radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-full: 9999px;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #ECF0F1;
+        --secondary: #BDC3C7;
+        --background: #2D3436;
+        --surface: #1E272E;
+        --nm-shadow-small: 6px 6px 12px #1a1f21, -6px -6px 12px #40494b;
+        --nm-shadow: 12px 12px 24px #1a1f21, -12px -12px 24px #40494b;
+        --nm-inset: inset 6px 6px 12px #1a1f21, inset -6px -6px 12px #40494b;
+    }
+}
+
+/* Reset e stili base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--background);
+    color: var(--primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Layout */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+.grid {
+    display: grid;
+    gap: var(--spacing-md);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Componenti */
+.card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--nm-shadow-small);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--nm-shadow);
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: var(--nm-shadow-small);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.button:hover {
+    box-shadow: var(--nm-shadow);
+    transform: translateY(-1px);
+}
+
+.button:active {
+    box-shadow: var(--nm-inset);
+    transform: translateY(0);
+}
+
+.button--primary {
+    background: var(--accent);
+    color: white;
+}
+
+/* Form elements */
+.input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--primary);
+    box-shadow: var(--nm-inset);
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    outline: none;
+    box-shadow: var(--nm-shadow-small);
+}
+
+/* Table */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: var(--spacing-lg) 0;
+}
+
+.table th,
+.table td {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.table th {
+    font-weight: 600;
+    background: var(--surface);
+}
+
+/* Utilities */
+.text-center { text-align: center; }
+.mt-1 { margin-top: var(--spacing-sm); }
+.mt-2 { margin-top: var(--spacing-md); }
+.mt-3 { margin-top: var(--spacing-lg); }
+.mb-1 { margin-bottom: var(--spacing-sm); }
+.mb-2 { margin-bottom: var(--spacing-md); }
+.mb-3 { margin-bottom: var(--spacing-lg); }
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-sm);
+    }
+    
+    .card {
+        padding: var(--spacing-md);
+    }
+    
+    .table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+</style> 
