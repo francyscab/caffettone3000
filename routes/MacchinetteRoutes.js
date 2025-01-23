@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 const createAuthenticatedAxiosInstance = require('../utils/axiosConfig');
 
-
 router.get('/:idIstituto/macchinetta/:idMacchinetta', async (req, res) => {
     const { idIstituto, idMacchinetta } = req.params;
     const istitutoUrl = `${process.env.API_URL}/istituti/${idIstituto}`;
-    const macchinettaUrl = `${process.env.API_URL}/macchinette/${idMacchinetta}`;
+    const macchinettaUrl = `${process.env.API_URL}/macchinette/dettaglio/${idIstituto}/${idMacchinetta}`;
     const userRoles = req.user.roles;
     const axiosInstance = createAuthenticatedAxiosInstance(req);
     try {
