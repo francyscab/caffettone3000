@@ -29,6 +29,19 @@ router.get('/:idIstituto/macchinetta/:idMacchinetta', async (req, res) => {
     }
 });
 
+router.get('/macchinetta/:idMacchinetta/svuota-cassa/:idIstituto', async (req, res) => {
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
+    try {
+        const response = await axiosInstance.get(
+            `${process.env.API_URL}/ricavi/svuota/${req.params.idIstituto}/${req.params.idMacchinetta}`
+        );
+        res.json(response.data);
+    } catch (error) {
+        console.error('Errore nello svuotamento della cassa:', error);
+        res.status(500).json({ error: 'Errore nello svuotamento della cassa' });
+    }
+});
+
 router.get('/macchinetta/:id/ricavi', async (req, res) => {
     const axiosInstance = createAuthenticatedAxiosInstance(req);
     const url = `${process.env.API_URL}/ricavi/totale/macchinetta/${req.params.id}`;

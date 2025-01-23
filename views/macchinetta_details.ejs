@@ -86,6 +86,27 @@
 				background-color: #2196F3; /* Blu Material al passaggio del mouse */
 				color: #ffffff; /* Testo bianco */
 			}
+			.btn-light {
+				background-color: rgba(255, 255, 255, 0.9);
+				border: none;
+				padding: 8px 16px;
+				border-radius: 20px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				transition: all 0.3s ease;
+			}
+			.btn-light:hover {
+				background-color: rgba(255, 255, 255, 1);
+				transform: translateY(-2px);
+			}
+			.btn-light:disabled {
+				opacity: 0.7;
+				cursor: not-allowed;
+			}
+			.btn-light .material-icons {
+				font-size: 20px;
+			}
 		</style>
 	</head>
 	<body>
@@ -128,8 +149,22 @@
 						<div class="col-md-6">
 							<div class="card stats-card">
 								<div class="card-body">
-									<h5 class="card-title text-white">Ricavi Totali</h5>
-									<h2 class="mb-0" id="totaleRicavi">€ 0.00</h2>
+									<div class="d-flex justify-content-between align-items-center">
+										<div>
+											<h5 class="card-title text-white">Ricavi Totali</h5>
+											<h2 class="mb-0" id="totaleRicavi">€ 0.00</h2>
+										</div>
+										<% if (user.roles.includes('amministratore')) { %>
+											<button 
+												type="button" 
+												class="btn btn-light" 
+												onclick="svuotaCassa()"
+												id="svuotaCassaBtn">
+												<i class="material-icons">payments</i>
+												Svuota Cassa
+											</button>
+										<% } %>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -476,6 +511,33 @@
 							},
 						},
 					});
+				}
+			}
+
+			async function svuotaCassa() {
+				const btn = document.getElementById('svuotaCassaBtn');
+				btn.disabled = true;
+				
+				try {
+					const response = await fetch(
+						`/macchinette/macchinetta/<%= macchinetta.id_macchinetta %>/svuota-cassa/<%= istituto.id_istituto %>`,
+						{ method: 'GET' }
+					);
+
+					if (!response.ok) {
+						throw new Error('Errore durante lo svuotamento della cassa');
+					}
+
+					const data = await response.json();
+					alert('Richiesta di svuotamento cassa inviata con successo');
+					
+					// Aggiorna i ricavi totali
+					fetchRicaviMacchinetta();
+				} catch (error) {
+					console.error('Errore:', error);
+					alert('Si è verificato un errore durante lo svuotamento della cassa');
+				} finally {
+					btn.disabled = false;
 				}
 			}
 
