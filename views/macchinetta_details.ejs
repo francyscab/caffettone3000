@@ -132,6 +132,10 @@
 							>
 								<%= macchinetta.status %>
 							</span>
+							<button type="button" class="btn btn-warning me-2" onclick="richiediManutenzione()">
+								<i class="material-icons d-flex align-items-center justify-content-center">build</i>
+								Richiedi Tecnico
+							</button>
 							<% if (user.roles.includes('amministratore')) { %>
 							<button
 								type="button"
@@ -545,6 +549,24 @@
 				fetchRicaviMacchinetta();
 				fetchStoricoRicavi();
 			});
+
+			async function richiediManutenzione() {
+				try {
+					const response = await fetch(`/manutenzioni/richiesta/<%= istituto.id_istituto %>/<%= macchinetta.id_macchinetta %>`, {
+						method: 'POST'
+					});
+					
+					if (!response.ok) {
+						throw new Error('Errore nella richiesta di manutenzione');
+					}
+					
+					// Mostra un alert di successo
+					alert('Richiesta di manutenzione inviata con successo');
+				} catch (error) {
+					console.error('Errore:', error.message);
+					alert('Errore nell\'invio della richiesta di manutenzione');
+				}
+			}
 		</script>
 	</body>
 </html>

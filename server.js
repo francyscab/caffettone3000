@@ -9,7 +9,7 @@ const authRoutes = require('./routes/AuthRoutes');
 const errorHandler = require('./middleware/error_handler');
 const istitutiRoutes = require('./routes/IstitutiRoutes');
 const macchinetteRoutes = require('./routes/MacchinetteRoutes');
-
+const manutenzioniRoutes = require('./routes/ManutenzioniRoutes');
 
 const app = express();
 
@@ -60,8 +60,7 @@ const authenticatedUserInfo= (req, res, next) => {
 app.use('/istituti',keycloak.protect(), authenticatedUserInfo, istitutiRoutes);
 app.use('/auth', authRoutes);
 app.use('/macchinette', keycloak.protect(), authenticatedUserInfo, macchinetteRoutes);
-
-
+app.use('/manutenzioni', manutenzioniRoutes);
 app.get('/', (req, res) => {
    res.render('index')
 });
