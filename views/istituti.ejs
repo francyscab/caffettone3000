@@ -36,9 +36,10 @@
 			}
 
 			.navbar-brand {
-				font-weight: 600;
+				font-weight: 700;
 				color: var(--text-primary);
-				font-size: 1.25rem;
+				font-size: 2.00rem;
+				letter-spacing: -0.5px;
 			}
 
 			.main-container {
@@ -50,6 +51,7 @@
 
 			.page-header {
 				margin-bottom: 3rem;
+				text-align: center;
 			}
 
 			.welcome-title {
@@ -57,11 +59,13 @@
 				font-weight: 600;
 				margin-bottom: 0.5rem;
 				color: var(--text-primary);
+				text-align: center;
 			}
 
 			.user-role {
 				display: inline-flex;
 				align-items: center;
+				justify-content: center;
 				padding: 0.5rem 1rem;
 				border-radius: 2rem;
 				font-size: 0.875rem;
@@ -89,9 +93,9 @@
 
 			.btn-logout {
 				padding: 0.5rem 1.25rem;
-				color: #ef4444;
-				background: transparent;
-				border: 1px solid #fecaca;
+				color: #ffffff;
+				background: #dc2626;
+				border: none;
 				border-radius: 0.5rem;
 				font-size: 0.875rem;
 				font-weight: 500;
@@ -99,8 +103,8 @@
 			}
 
 			.btn-logout:hover {
-				background: #fef2f2;
-				color: #dc2626;
+				background: #b91c1c;
+				transform: translateY(-1px);
 			}
 
 			.filters-section {
@@ -149,7 +153,7 @@
 			}
 
 			.btn-addInstitute {
-				background-color: green;
+				background-color: #22c55e;
 				color: white;
 				border: none;
 				padding: 0.625rem 1.25rem;
@@ -159,8 +163,9 @@
 			}
 
 			.btn-addInstitute:hover {
-				opacity: 0.9;
-				transform: translateY(-1px);
+				background-color: #16a34a;
+				color: white;
+    			transform: translateY(-1px);
 			}
 
 			.institutes-grid {
@@ -374,6 +379,8 @@
 				</div>
 			</div>
 
+			<h2 class="section-heading mb-4">I tuoi istituti</h2>
+
 			<section class="filters-section">
 				<h2 class="filters-title">Filtri</h2>
 				<form method="GET" action="/istituti">
@@ -381,8 +388,8 @@
 						<div class="col-md-6">
 							<select name="citta" class="form-select">
 								<option value="">Tutte le città</option>
-								<% const cittaUniche = [...new Set(istituti.map(i => i.citta))];
-								%> <% cittaUniche.forEach(function(citta) { %>
+								<% const cittaUniche = [...new Set(istituti.map(i => i.citta))]; %>
+								<% cittaUniche.forEach(function(citta) { %>
 								<option value="<%= citta %>"><%= citta %></option>
 								<% }); %>
 							</select>
@@ -423,8 +430,6 @@
 					</div>
 				</form>
 			</section>
-
-			<h2 class="section-heading">I tuoi istituti</h2>
 
 			<% if (istituti && istituti.length > 0) { %>
 				<div class="institutes-grid">
