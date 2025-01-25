@@ -42,9 +42,9 @@ router.get('/macchinetta/:idMacchinetta/svuota-cassa/:idIstituto', async (req, r
     }
 });
 
-router.get('/macchinetta/:id/ricavi', async (req, res) => {
+router.get('/istituto/:idIstituto/macchinetta/ricavi/:idMacchinetta', async (req, res) => {
     const axiosInstance = createAuthenticatedAxiosInstance(req);
-    const url = `${process.env.API_URL}/ricavi/totale/macchinetta/${req.params.id}`;
+    const url = `${process.env.API_URL}/ricavi/totale/macchinetta/${req.params.idIstituto}/${req.params.idMacchinetta}`;
     try {
         const response = await axiosInstance.get(url);
         res.json(response.data);
@@ -54,9 +54,9 @@ router.get('/macchinetta/:id/ricavi', async (req, res) => {
     }
 });
 
-router.get('/macchinetta/:id/storico-ricavi', async (req, res) => {
+router.get('/istituto/:idIstituto/macchinetta/storico-ricavi/:idMacchinetta', async (req, res) => {
     const axiosInstance = createAuthenticatedAxiosInstance(req);
-    const url = `${process.env.API_URL}/ricavi/macchinetta/${req.params.id}`;
+    const url = `${process.env.API_URL}/ricavi/macchinetta/${req.params.idIstituto}/${req.params.idMacchinetta}`;
     try {
         const response = await axiosInstance.get(url);
         res.json(response.data);

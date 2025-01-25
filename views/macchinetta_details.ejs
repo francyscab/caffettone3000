@@ -299,7 +299,7 @@
 			async function fetchRicaviMacchinetta() {
 				try {
 					const response = await fetch(
-						"/macchinette/macchinetta/<%= macchinetta.id_macchinetta %>/ricavi"
+						"/macchinette/istituto/<%= istituto.id_istituto %>/macchinetta/ricavi/<%= macchinetta.id_macchinetta %>"
 					);
 					if (response.status === 404) {
 						document.getElementById("totaleRicavi").textContent = "€ 0.00";
@@ -321,7 +321,7 @@
 			async function fetchStoricoRicavi() {
 				try {
 					const response = await fetch(
-						"/macchinette/macchinetta/<%= macchinetta.id_macchinetta %>/storico-ricavi"
+						"/macchinette/istituto/<%= istituto.id_istituto %>/macchinetta/storico-ricavi/<%= macchinetta	.id_macchinetta %>"
 					);
 					let ricavi = [];
 
