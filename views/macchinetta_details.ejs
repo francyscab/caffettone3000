@@ -346,15 +346,14 @@
 			async function fetchStoricoRicavi() {
 				try {
 					const response = await fetch(
-						"/macchinette/istituto/<%= istituto.id_istituto %>/macchinetta/storico-ricavi/<%= macchinetta	.id_macchinetta %>"
+						"/macchinette/istituto/<%= istituto.id_istituto %>/macchinetta/storico-ricavi/<%= macchinetta.id_macchinetta%>"
 					);
 					let ricavi = [];
 
 					if (response.status === 404) {
 						ricavi = [];
-					} else if (!response.ok) {
-						throw new Error(`HTTP error! status: ${response.status}`);
-					} else {
+					}
+					else {
 						ricavi = await response.json();
 					}
 
