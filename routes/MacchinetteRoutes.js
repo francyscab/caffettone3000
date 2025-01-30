@@ -69,7 +69,7 @@ router.get('/istituto/:idIstituto/macchinetta/storico-ricavi/:idMacchinetta', as
 router.post('/:idIstituto/macchinette/:idMacchinetta/delete', async (req, res) => {
     try {
         const axiosInstance = createAuthenticatedAxiosInstance(req);
-        const url = `${process.env.API_URL}/macchinette/${req.params.idMacchinetta}`;
+        const url = `${process.env.API_URL}/macchinette/dettaglio/${req.params.idIstituto}/${req.params.idMacchinetta}`;
         await axiosInstance.delete(url);
         res.redirect(`/istituti/${req.params.idIstituto}/macchinette`);
     } catch (error) {
