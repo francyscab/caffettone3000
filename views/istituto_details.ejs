@@ -187,8 +187,8 @@
                                         <p class="card-text">
                                             <i class="material-icons">info</i>
                                             <span>Stato: 
-                                                <span class="badge ms-1 <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %>">
-                                                    <%= macchinetta.status %>
+                                                <span class="badge ms-1 <%= macchinetta.online ? 'bg-success' : 'bg-danger' %>">
+                                                    <%= macchinetta.online ? 'ONLINE' : 'OFFLINE' %>
                                                 </span>
                                             </span>
                                         </p>

@@ -149,4 +149,16 @@ router.delete('/:id/delete', async (req, res) => {
     }
 });
 
+router.get('/ricavi/totale', async (req, res) => {
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
+    try {
+        const response = await axiosInstance.get(`${process.env.API_URL}/ricavi/totale`);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Errore nel recupero dei ricavi:', error);
+        res.status(500).json({ error: 'Errore nel recupero dei ricavi' });
+    }
+
+});
+
 module.exports = router;

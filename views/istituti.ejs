@@ -602,7 +602,7 @@
 		<script>
 		async function fetchRicaviTotali() {
 			try {
-				const response = await fetch('/ricavi/totale');
+				const response = await fetch('/istituti/ricavi/totale');
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}

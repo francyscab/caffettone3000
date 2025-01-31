@@ -83,5 +83,17 @@ router.post('/:idIstituto/macchinette/:idMacchinetta/delete', async (req, res) =
     }
 });
 
+router.get('/transazioni/istituto/:idIstituto/macchinetta/:idMacchinetta', async (req, res) => {
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
+    const url = `${process.env.API_URL}/transazioni/istituto/${req.params.idIstituto}/macchinetta/${req.params.idMacchinetta}`;
+    
+    try {
+        const response = await axiosInstance.get(url);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Errore nel recupero delle transazioni:', error);
+        res.status(500).json({ error: 'Errore nel recupero delle transazioni' });
+    }
+});
 
 module.exports = router;

@@ -65,7 +65,7 @@
 				background-color: #ffffff;
 			}
 			.btn-primary {
-				background-color: #2196F3; /* Blu Material */
+				background-color: #2196f3; /* Blu Material */
 				color: #ffffff; /* Testo bianco */
 				border: none;
 				padding: 10px 20px; /* Padding ridotto per un aspetto più elegante */
@@ -74,21 +74,21 @@
 				transition: all 0.3s ease;
 			}
 			.btn-primary:hover {
-				background-color: #1976D2; /* Blu scuro al passaggio del mouse */
+				background-color: #1976d2; /* Blu scuro al passaggio del mouse */
 				transform: translateY(-2px);
 				box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 			}
 			.btn-secondary {
 				background-color: #f5f5f5; /* Sfondo chiaro per il pulsante secondario */
-				color: #2196F3; /* Colore blu per il testo */
-				border: 1px solid #2196F3; /* Bordo blu */
+				color: #2196f3; /* Colore blu per il testo */
+				border: 1px solid #2196f3; /* Bordo blu */
 				padding: 10px 20px; /* Padding ridotto */
 				border-radius: 25px; /* Angoli arrotondati */
 				transition: all 0.3s ease;
 			}
 			.btn-secondary:hover {
-				background-color: #2196F3; 
-				color: #ffffff; 
+				background-color: #2196f3;
+				color: #ffffff;
 			}
 			.btn-light {
 				background-color: rgba(255, 255, 255, 0.9);
@@ -169,12 +169,19 @@
 						</h1>
 						<div>
 							<span
-								class="badge fs-6 status-badge <%= macchinetta.status === 'OPERATIVA' ? 'bg-success' : 'bg-danger' %> me-2"
+								class="badge fs-6 status-badge <%= macchinetta.online ? 'bg-success' : 'bg-danger' %> me-2"
 							>
-								<%= macchinetta.status %>
+								<%= macchinetta.online ? 'ONLINE' : 'OFFLINE' %>
 							</span>
-							<button type="button" class="btn btn-warning me-2" onclick="richiediManutenzione()">
-								<i class="material-icons d-flex align-items-center justify-content-center">build</i>
+							<button
+								type="button"
+								class="btn btn-warning me-2"
+								onclick="richiediManutenzione()"
+							>
+								<i
+									class="material-icons d-flex align-items-center justify-content-center"
+									>build</i
+								>
 								Richiedi Tecnico
 							</button>
 							<% if (user.roles.includes('amministratore')) { %>
@@ -184,7 +191,10 @@
 								data-bs-toggle="modal"
 								data-bs-target="#deleteMacchinaModal"
 							>
-								<i class="material-icons d-flex align-items-center justify-content-center">delete</i>
+								<i
+									class="material-icons d-flex align-items-center justify-content-center"
+									>delete</i
+								>
 							</button>
 							<% } %>
 						</div>
@@ -194,20 +204,23 @@
 						<div class="col-md-6">
 							<div class="card stats-card">
 								<div class="card-body">
-									<div class="d-flex justify-content-between align-items-center">
+									<div
+										class="d-flex justify-content-between align-items-center"
+									>
 										<div>
 											<h5 class="card-title text-white">Ricavi Totali</h5>
 											<h2 class="mb-0" id="totaleRicavi">€ 0.00</h2>
 										</div>
 										<% if (user.roles.includes('amministratore')) { %>
-											<button 
-												type="button" 
-												class="btn btn-light" 
-												onclick="svuotaCassa()"
-												id="svuotaCassaBtn">
-												<i class="material-icons">payments</i>
-												Svuota Cassa
-											</button>
+										<button
+											type="button"
+											class="btn btn-light"
+											onclick="svuotaCassa()"
+											id="svuotaCassaBtn"
+										>
+											<i class="material-icons">payments</i>
+											Svuota Cassa
+										</button>
 										<% } %>
 									</div>
 								</div>
@@ -215,7 +228,6 @@
 						</div>
 					</div>
 
-				
 					<div class="row">
 						<div class="col-md-6">
 							<p>
@@ -241,10 +253,7 @@
 							</p>
 							<p>
 								<i class="material-icons detail-icon">euro</i>
-								Ultimo Svuotamento Cassa: <%=
-								macchinetta.data_ultimo_svuotamento_cassa ? new
-								Date(macchinetta.data_ultimo_svuotamento_cassa).toLocaleDateString()
-								: 'Mai effettuato' %>
+								Ultimo Svuotamento Cassa: <%= macchinetta.data_ultimo_svuotamento_cassa ? new Date(macchinetta.data_ultimo_svuotamento_cassa).toLocaleDateString() : 'Mai effettuato' %>
 							</p>
 						</div>
 					</div>
@@ -364,7 +373,6 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-		
 		<script>
 			async function fetchRicaviMacchinetta() {
 				try {
@@ -397,8 +405,7 @@
 
 					if (response.status === 404) {
 						ricavi = [];
-					}
-					else {
+					} else {
 						ricavi = await response.json();
 					}
 
@@ -504,10 +511,10 @@
 										labels: {
 											font: {
 												family: "'Roboto', sans-serif",
-												size: 12
+												size: 12,
 											},
-											padding: 16
-										}
+											padding: 16,
+										},
 									},
 									title: {
 										display: true,
@@ -515,37 +522,37 @@
 										font: {
 											family: "'Roboto', sans-serif",
 											size: 16,
-											weight: 500
+											weight: 500,
 										},
-										padding: 16
-									}
+										padding: 16,
+									},
 								},
 								scales: {
 									y: {
 										beginAtZero: true,
 										grid: {
-											color: 'rgba(0, 0, 0, 0.05)'
+											color: "rgba(0, 0, 0, 0.05)",
 										},
 										ticks: {
 											font: {
-												family: "'Roboto', sans-serif"
+												family: "'Roboto', sans-serif",
 											},
 											callback: function (value) {
 												return "€ " + value.toFixed(2);
-											}
-										}
+											},
+										},
 									},
 									x: {
 										grid: {
-											display: false
+											display: false,
 										},
 										ticks: {
 											font: {
-												family: "'Roboto', sans-serif"
-											}
-										}
-									}
-								}
+												family: "'Roboto', sans-serif",
+											},
+										},
+									},
+								},
 							},
 						});
 					}
@@ -588,27 +595,27 @@
 			}
 
 			async function svuotaCassa() {
-				const btn = document.getElementById('svuotaCassaBtn');
+				const btn = document.getElementById("svuotaCassaBtn");
 				btn.disabled = true;
-				
+
 				try {
 					const response = await fetch(
 						`/macchinette/macchinetta/<%= macchinetta.id_macchinetta %>/svuota-cassa/<%= istituto.id_istituto %>`,
-						{ method: 'GET' }
+						{ method: "GET" }
 					);
 
 					if (!response.ok) {
-						throw new Error('Errore durante lo svuotamento della cassa');
+						throw new Error("Errore durante lo svuotamento della cassa");
 					}
 
 					const data = await response.json();
-					alert('Richiesta di svuotamento cassa inviata con successo');
-					
+					alert("Richiesta di svuotamento cassa inviata con successo");
+
 					// Aggiorna i ricavi totali
 					fetchRicaviMacchinetta();
 				} catch (error) {
-					console.error('Errore:', error);
-					alert('Si è verificato un errore durante lo svuotamento della cassa');
+					console.error("Errore:", error);
+					alert("Si è verificato un errore durante lo svuotamento della cassa");
 				} finally {
 					btn.disabled = false;
 				}
@@ -617,46 +624,46 @@
 			async function fetchTransazioni() {
 				try {
 					const response = await fetch(
-						`/api/management/transazioni/istituto/<%= istituto.id_istituto %>/macchinetta/<%= macchinetta.id_macchinetta %>`
+						`/macchinette/transazioni/istituto/<%= istituto.id_istituto %>/macchinetta/<%= macchinetta.id_macchinetta %>`
 					);
-					
+
 					if (!response.ok) {
 						throw new Error(`HTTP error! status: ${response.status}`);
 					}
-					
-			const transazioni = await response.json();
-			const tableBody = document.getElementById("transazioniTableBody");
-			
-			if (transazioni.length === 0) {
-				tableBody.innerHTML = '<tr><td colspan="4" class="text-center">Nessuna transazione registrata</td></tr>';
-				return;
-			}
-			
-			tableBody.innerHTML = transazioni
-				.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-				.map(transazione => `
+
+					const transazioni = await response.json();
+					const tableBody = document.getElementById("transazioniTableBody");
+
+					if (transazioni.length === 0) {
+						tableBody.innerHTML =
+							'<tr><td colspan="4" class="text-center">Nessuna transazione registrata</td></tr>';
+						return;
+					}
+
+					tableBody.innerHTML = transazioni
+						.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+						.map(
+							(transazione) => `
 					<tr>
 						<td>${new Date(transazione.timestamp).toLocaleString()}</td>
 						<td>${transazione.transactionId}</td>
 						<td>${transazione.drinkCode}</td>
 						<td>
-							<div class="progress" style="height: 20px;">
-								<div class="progress-bar bg-info" 
-									 role="progressbar" 
-									 style="width: ${(transazione.sugarLevel / 5) * 100}%"
-									 aria-valuenow="${transazione.sugarLevel}" 
-									 aria-valuemin="0" 
-									 aria-valuemax="5">
-									${transazione.sugarLevel}/5
-								</div>
+							<div class="d-flex align-items-center">
+								${Array(5).fill().map((_, i) => `
+									<i class="material-icons me-1" style="color: ${i < transazione.sugarLevel ? '#17a2b8' : '#dee2e6'}">
+										circle
+									</i>
+								`).join('')}
 							</div>
 						</td>
 					</tr>
-				`).join('');
-				
+				`
+						)
+						.join("");
 				} catch (error) {
 					console.error("Errore nel recupero delle transazioni:", error);
-					document.getElementById("transazioniTableBody").innerHTML = 
+					document.getElementById("transazioniTableBody").innerHTML =
 						'<tr><td colspan="4" class="text-center text-danger">Errore nel caricamento delle transazioni</td></tr>';
 				}
 			}
@@ -669,19 +676,22 @@
 
 			async function richiediManutenzione() {
 				try {
-					const response = await fetch(`/manutenzioni/richiesta/<%= istituto.id_istituto %>/<%= macchinetta.id_macchinetta %>`, {
-						method: 'POST'
-					});
-					
+					const response = await fetch(
+						`/manutenzioni/richiesta/<%= istituto.id_istituto %>/<%= macchinetta.id_macchinetta %>`,
+						{
+							method: "POST",
+						}
+					);
+
 					if (!response.ok) {
-						throw new Error('Errore nella richiesta di manutenzione');
+						throw new Error("Errore nella richiesta di manutenzione");
 					}
-					
+
 					// Mostra un alert di successo
-					alert('Richiesta di manutenzione inviata con successo');
+					alert("Richiesta di manutenzione inviata con successo");
 				} catch (error) {
-					console.error('Errore:', error.message);
-					alert('Errore nell\'invio della richiesta di manutenzione');
+					console.error("Errore:", error.message);
+					alert("Errore nell'invio della richiesta di manutenzione");
 				}
 			}
 		</script>
