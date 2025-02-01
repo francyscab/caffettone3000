@@ -1,0 +1,199 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #eaeaea;
+}
+
+.container {
+    margin-top: 40px;
+}
+
+/* Typography */
+h1 {
+    font-weight: 500;
+    color: #3f51b5;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+h2, h3 {
+    color: #3f51b5;
+    margin: 2rem 0 1rem;
+    font-weight: 500;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 48px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.info-card {
+    border: none;
+    border-radius: 48px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+}
+
+.stats-card {
+    background: linear-gradient(135deg, #3f51b5 0%, #5c6bc0 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    padding: 1.5rem;
+    border-radius: 48px;
+}
+
+.card.clickable {
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.card.clickable:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Icons and Badges */
+.material-icons {
+    vertical-align: middle;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+.detail-icon {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+.status-badge {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 50px;
+}
+
+/* Buttons */
+.btn {
+    transition: transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    border-radius: 100px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background-color: #f44336;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #d32f2f;
+}
+
+.btn-warning {
+    background-color: #ff9800;
+    border: none;
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #f57c00;
+}
+
+/* Back Button */
+.back-button {
+    color: #3f51b5;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    color: #283593;
+}
+
+/* Tables */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    color: #666;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.table td {
+    vertical-align: middle;
+    color: #666;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Charts */
+.chart-container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Card Text */
+.card-text {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: #666;
+}
+
+/* Modal */
+.modal-content {
+    border: none;
+    border-radius: 48px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.modal-header {
+    border-bottom: 1px solid #eee;
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #eee;
+    padding: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin-top: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .stats-card h2 {
+        font-size: 1.75rem;
+    }
+}
+

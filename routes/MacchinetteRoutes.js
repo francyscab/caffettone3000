@@ -17,7 +17,8 @@ router.get('/:idIstituto/macchinetta/:idMacchinetta', async (req, res) => {
         res.render('macchinetta_details', {
             istituto: istitutoRes.data,
             macchinetta: macchinettaRes.data,
-            user: req.user
+            user: req.user,
+            keycloakToken: req.kauth.grant.access_token.token
         });
     } catch (error) {
         console.error('Errore:', error);

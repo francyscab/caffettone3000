@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const expressWs = require('express-ws');
 const path = require('path');
 const morgan = require('morgan');
 const { keycloak, memoryStore } = require('./config/keycloak_config');
@@ -10,8 +11,10 @@ const errorHandler = require('./middleware/error_handler');
 const istitutiRoutes = require('./routes/IstitutiRoutes');
 const macchinetteRoutes = require('./routes/MacchinetteRoutes');
 const manutenzioniRoutes = require('./routes/ManutenzioniRoutes');
+const websocketRouter= require('./routes/websocket');
 
 const app = express();
+const wsInstance = expressWs(app);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -64,6 +67,7 @@ app.use('/manutenzioni', manutenzioniRoutes);
 app.get('/', (req, res) => {
    res.render('index')
 });
+app.use('/ws', websocketRouter);
 
 app.use(errorHandler);
 
