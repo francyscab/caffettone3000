@@ -12,6 +12,7 @@ const istitutiRoutes = require('./routes/IstitutiRoutes');
 const macchinetteRoutes = require('./routes/MacchinetteRoutes');
 const manutenzioniRoutes = require('./routes/ManutenzioniRoutes');
 const websocketRouter= require('./routes/websocket');
+const dashboardRoutes = require('./routes/DashboardRoutes');
 
 const app = express();
 const wsInstance = expressWs(app);
@@ -68,6 +69,7 @@ app.get('/', (req, res) => {
    res.render('index')
 });
 app.use('/ws', websocketRouter);
+app.use('/', keycloak.protect(), authenticatedUserInfo, dashboardRoutes);
 
 app.use(errorHandler);
 

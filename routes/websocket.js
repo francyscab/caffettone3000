@@ -50,7 +50,6 @@ router.ws('/consumables', wsLogger, (ws, req) => {
         }
     });
 
-    // Gestione chiusura
     ws.on('close', () => {
         console.log('Client WebSocket chiuso');
         if (sparkWs.readyState === WebSocket.OPEN) {
@@ -65,7 +64,6 @@ router.ws('/consumables', wsLogger, (ws, req) => {
         }
     });
 
-    // Gestione errori
     ws.on('error', (error) => {
         console.error('Errore WebSocket client:', error);
     });
