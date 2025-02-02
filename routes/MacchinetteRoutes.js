@@ -32,9 +32,11 @@ router.get('/:idIstituto/macchinetta/:idMacchinetta', async (req, res) => {
 
 router.get('/macchinetta/:idMacchinetta/svuota-cassa/:idIstituto', async (req, res) => {
     const axiosInstance = createAuthenticatedAxiosInstance(req);
+    const username = req.user.username;
     try {
         const response = await axiosInstance.get(
-            `${process.env.API_URL}/ricavi/svuota/${req.params.idIstituto}/${req.params.idMacchinetta}`
+            `${process.env.API_URL}/ricavi/svuota/${req.params.idIstituto}/${req.params.idMacchinetta}`,
+            { data: { username } }
         );
         res.json(response.data);
     } catch (error) {
@@ -94,6 +96,19 @@ router.get('/transazioni/istituto/:idIstituto/macchinetta/:idMacchinetta', async
     } catch (error) {
         console.error('Errore nel recupero delle transazioni:', error);
         res.status(500).json({ error: 'Errore nel recupero delle transazioni' });
+    }
+});
+
+router.get('/faults/:idIstituto/:idMacchinetta', async (req, res) => {
+    const axiosInstance = createAuthenticatedAxiosInstance(req);
+    const url = `${process.env.API_URL}/faults/macchinetta/${req.params.idIstituto}/${req.params.idMacchinetta}`;
+    
+    try {
+        const response = await axiosInstance.get(url);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Errore nel recupero dei guasti:', error);
+        res.status(500).json({ error: 'Errore nel recupero dei guasti' });
     }
 });
 

@@ -197,3 +197,57 @@ h2, h3 {
     }
 }
 
+/* Stili per la sezione guasti */
+.table tr.table-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.table tr.table-warning:hover {
+    background-color: rgba(255, 193, 7, 0.2);
+}
+
+.table tr.table-success {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.table tr.table-success:hover {
+    background-color: rgba(40, 167, 69, 0.2);
+}
+
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge.bg-info {
+    background-color: #17a2b8 !important;
+    color: white;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+/* Stili per la tabella guasti */
+#faultsTableBody td {
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+}
+
+#faultsTableBody .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+

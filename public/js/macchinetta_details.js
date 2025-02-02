@@ -464,4 +464,92 @@ function handleRicaviError() {
 function handleTransazioniError() {
     document.getElementById("transazioniTableBody").innerHTML = 
         '<tr><td colspan="4" class="text-center text-danger">Errore nel caricamento delle transazioni</td></tr>';
+}
+
+async function fetchFaults(macchinaId, istitutoId) {
+    try {
+        const response = await fetch(`/macchinette/faults/${istitutoId}/${macchinaId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const faults = await response.json();
+        updateButtonsVisibility(faults);
+        updateFaultsTable(faults);
+    } catch (error) {
+        console.error("Errore nel recupero dei guasti:", error);
+        showAlert("Errore nel recupero dei guasti", "danger");
+        handleFaultsError();
+    }
+}
+
+function updateButtonsVisibility(faults) {
+    const svuotaCassaBtn = document.getElementById("svuotaCassaBtn");
+    const richiediTecnicoBtn = document.getElementById("richiediTecnicoBtn");
+
+    if (!svuotaCassaBtn || !richiediTecnicoBtn) return;
+
+    // Nascondi inizialmente i pulsanti
+    svuotaCassaBtn.style.display = "none";
+    richiediTecnicoBtn.style.display = "none";
+
+    // Verifica la presenza di guasti attivi (non risolti)
+    const activeGuasti = faults.filter(fault => !fault.risolto);
+
+    // Controlla i tipi di guasto
+    const hasCassaPiena = activeGuasti.some(fault => fault.tipoGuasto === "CASSA_PIENA");
+    const hasGuastoGenerico = activeGuasti.some(fault => fault.tipoGuasto === "GUASTO_GENERICO");
+    const hasConsumabileTerminato = activeGuasti.some(fault => fault.tipoGuasto === "CONSUMABILE_TERMINATO");
+
+    // Mostra il pulsante svuota cassa se c'è un guasto di tipo CASSA_PIENA
+    if (hasCassaPiena) {
+        svuotaCassaBtn.style.display = "inline-flex";
+    }
+
+    // Mostra il pulsante richiedi tecnico se c'è un guasto generico o consumabile terminato
+    if (hasGuastoGenerico || hasConsumabileTerminato) {
+        richiediTecnicoBtn.style.display = "inline-flex";
+    }
+}
+
+function updateFaultsTable(faults) {
+    console.log(faults);
+    const tableBody = document.getElementById("faultsTableBody");
+    if (!tableBody) return;
+
+    if (faults.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Nessun guasto registrato</td></tr>';
+        return;
+    }
+
+    const sortedFaults = faults.sort((a, b) => new Date(b.dataSegnalazione) - new Date(a.dataSegnalazione));
+
+    tableBody.innerHTML = sortedFaults.map(fault => `
+        <tr class="${fault.risolto ? 'table-success' : 'table-warning'}">
+            <td>${new Date(fault.dataSegnalazione).toLocaleString()}</td>
+            <td>${getFaultTypeLabel(fault.tipoGuasto)}</td>
+            <td>${fault.descrizione}</td>
+            <td>
+                <span class="badge ${fault.risolto ? 'bg-success' : 'bg-warning'}">
+                    ${fault.risolto ? 'Risolto' : 'In corso'}
+                </span>
+            </td>
+            <td>${fault.idFault}</td>
+        </tr>
+    `).join('');
+}
+
+function getFaultTypeLabel(tipoGuasto) {
+    const labels = {
+        'CASSA_PIENA': '<span class="badge bg-info">Cassa Piena</span>',
+        'GUASTO_GENERICO': '<span class="badge bg-danger">Guasto Generico</span>',
+        'CONSUMABILE_TERMINATO': '<span class="badge bg-warning text-dark">Consumabile Terminato</span>'
+    };
+    return labels[tipoGuasto] || `<span class="badge bg-secondary">${tipoGuasto}</span>`;
+}
+
+function handleFaultsError() {
+    const tableBody = document.getElementById("faultsTableBody");
+    if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Errore nel caricamento dei guasti</td></tr>';
+    }
 } 

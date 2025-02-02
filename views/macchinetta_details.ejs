@@ -43,6 +43,8 @@
 							<button
 								type="button"
 								class="btn btn-warning me-2"
+								id="richiediTecnicoBtn"
+								style="display: none;"
 								onclick="richiediManutenzione('<%= macchinetta.id_macchinetta %>', '<%= istituto.id_istituto %>')"
 							>
 								<i
@@ -82,6 +84,7 @@
 										<button
 											type="button"
 											class="btn btn-light"
+											style="display: none;"
 											onclick="svuotaCassa('<%= macchinetta.id_macchinetta %>', '<%= istituto.id_istituto %>')"
 											id="svuotaCassaBtn"
 										>
@@ -101,25 +104,8 @@
 								<i class="material-icons detail-icon">location_on</i>
 								Piano: <%= macchinetta.piano %>
 							</p>
-							<p>
-								<i class="material-icons detail-icon">event</i>
-								Data Installazione: <%= macchinetta.data_installazione ? new Date(macchinetta.data_installazione).toLocaleDateString() : 'Non disponibile' %>
-							</p>
-							<p>
-								<i class="material-icons detail-icon">build</i>
-								Ultima Manutenzione: <%= macchinetta.data_ultima_manutenzione ? new Date(macchinetta.data_ultima_manutenzione).toLocaleDateString() : 'Mai effettuata' %>
-							</p>
 						</div>
-						<div class="col-md-6">
-							<p>
-								<i class="material-icons detail-icon">inventory_2</i>
-								Ultimo Rifornimento: <%= macchinetta.data_ultimo_refill ? new Date(macchinetta.data_ultimo_refill).toLocaleDateString() : 'Mai effettuato' %>
-							</p>
-							<p>
-								<i class="material-icons detail-icon">euro</i>
-								Ultimo Svuotamento Cassa: <%= macchinetta.data_ultimo_svuotamento_cassa ? new Date(macchinetta.data_ultimo_svuotamento_cassa).toLocaleDateString() : 'Mai effettuato' %>
-							</p>
-						</div>
+					
 					</div>
 				</div>
 			</div>
@@ -138,6 +124,36 @@
 								<span class="visually-hidden">Caricamento...</span>
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Sezione Guasti -->
+			<div class="card mt-4">
+				<div class="card-body">
+					<h3 class="mb-4">
+						<i class="material-icons detail-icon">warning</i>
+						Storico Guasti
+					</h3>
+
+					<!-- Tabella Guasti -->
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Data Segnalazione</th>
+									<th>Tipo Guasto</th>
+									<th>Descrizione</th>
+									<th>Stato</th>
+									<th>ID Guasto</th>
+								</tr>
+							</thead>
+							<tbody id="faultsTableBody">
+								<tr>
+									<td colspan="5" class="text-center">Caricamento dati...</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -264,6 +280,7 @@
 				fetchRicaviMacchinetta(macchinaId, istitutoId);
 				fetchStoricoRicavi(macchinaId, istitutoId);
 				fetchTransazioni(macchinaId, istitutoId);
+				fetchFaults(macchinaId, istitutoId);
 				initWebSocket(macchinaId, istitutoId, keycloakToken);
 			});
 		</script>
