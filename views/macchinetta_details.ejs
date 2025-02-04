@@ -128,13 +128,28 @@
 				</div>
 			</div>
 
-			<!-- Sezione Guasti -->
 			<div class="card mt-4">
 				<div class="card-body">
-					<h3 class="mb-4">
-						<i class="material-icons detail-icon">warning</i>
-						Storico Guasti
-					</h3>
+					<div class="d-flex justify-content-between align-items-center mb-4">
+						<h3>
+							<i class="material-icons detail-icon">warning</i>
+							Storico Guasti
+						</h3>
+						<div class="btn-group filter-group" role="group" aria-label="Filtro guasti">
+							<button type="button" class="btn btn-filter" data-filter="tutti">
+								<i class="material-icons">list_alt</i>
+								Tutti
+							</button>
+							<button type="button" class="btn btn-filter" data-filter="in-corso">
+								<i class="material-icons">pending</i>
+								In Corso
+							</button>
+							<button type="button" class="btn btn-filter" data-filter="risolti">
+								<i class="material-icons">check_circle</i>
+								Risolti
+							</button>
+						</div>
+					</div>
 
 					<!-- Tabella Guasti -->
 					<div class="table-responsive">

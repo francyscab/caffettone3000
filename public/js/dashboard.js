@@ -129,20 +129,45 @@ function updateCharts(charts, data) {
         transChart.data.datasets[0].data = conteggioFinale;
         transChart.update();
     }
+    console.log(data.ricavi);
 
     if (data.ricavi && data.ricavi.length > 0) {
         const ricaviPerData = data.ricavi.reduce((acc, ricavo) => {
-            const data = new Date(ricavo.data_ricavo).toLocaleDateString();
-            acc[data] = (acc[data] || 0) + parseFloat(ricavo.somma_ricavo);
-            return acc;
+            if (!ricavo.data_ricavo) {
+                console.warn('data_ricavo mancante:', ricavo);
+                return acc;
+            }
+            
+            try {
+                const data = new Date(ricavo.data_ricavo);
+                const dataFormattata = data.toLocaleDateString('it-IT', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                
+                const somma = parseFloat(ricavo.somma_ricavo) || 0;
+                acc[dataFormattata] = (acc[dataFormattata] || 0) + somma;
+                
+                return acc;
+            } catch (err) {
+                console.error('Errore nel processare il ricavo:', err, ricavo);
+                return acc;
+            }
         }, {});
 
         const ricaviOrdinati = Object.entries(ricaviPerData)
-            .sort(([dataA], [dataB]) => new Date(dataA) - new Date(dataB))
+            .sort(([dataA], [dataB]) => {
+                const [dayA, monthA, yearA] = dataA.split('/');
+                const [dayB, monthB, yearB] = dataB.split('/');
+                return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
+            })
             .slice(-7);
 
         revChart.data.labels = ricaviOrdinati.map(([data]) => data);
-        revChart.data.datasets[0].data = ricaviOrdinati.map(([, somma]) => somma);
+        revChart.data.datasets[0].data = ricaviOrdinati.map(([, somma]) => 
+            parseFloat(somma.toFixed(2))
+        );
         revChart.update();
     }
 }
@@ -159,7 +184,6 @@ function loadMachinesData() {
                     ${machine.online ? 'Online' : 'Offline'}
                 </span>
             </td>
-            <td>€${machine.ultimo_ricavo || '0.00'}</td>
         </tr>
     `).join('');
 }

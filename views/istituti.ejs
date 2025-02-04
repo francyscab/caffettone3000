@@ -3,6 +3,7 @@
 	<head>
 		<title>Istituti - Caffettone 3000</title>
 		<link href="/css/style.css" rel="stylesheet" />
+		<link href="/css/istituti.css" rel="stylesheet" />
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
 			rel="stylesheet"
@@ -11,311 +12,6 @@
 			href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		<style>
-			:root {
-				--primary-bg: #ffffff;
-				--secondary-bg: #f9fafb;
-				--accent-color: #0ea5e9;
-				--text-primary: #0f172a;
-				--text-secondary: #64748b;
-				--border-color: #e2e8f0;
-				--hover-bg: #f1f5f9;
-			}
-
-			body {
-				font-family: "Plus Jakarta Sans", sans-serif;
-				background-color: var(--secondary-bg);
-				color: var(--text-primary);
-				line-height: 1.6;
-			}
-
-			.navbar {
-				background: rgba(255, 255, 255, 0.8);
-				backdrop-filter: blur(8px);
-				border-bottom: 1px solid var(--border-color);
-				padding: 1rem 0;
-			}
-
-			.navbar-brand {
-				font-weight: 700;
-				color: var(--text-primary);
-				font-size: 2.00rem;
-				letter-spacing: -0.5px;
-			}
-
-			.main-container {
-				max-width: 1400px;
-				margin: 0 auto;
-				padding: 2rem 1.5rem;
-				position: relative;
-			}
-
-			.page-header {
-				margin-bottom: 3rem;
-				text-align: center;
-			}
-
-			.welcome-title {
-				font-size: 2rem;
-				font-weight: 600;
-				margin-bottom: 0.5rem;
-				color: var(--text-primary);
-				text-align: center;
-			}
-
-			.user-role {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				padding: 0.5rem 1rem;
-				border-radius: 2rem;
-				font-size: 0.875rem;
-				font-weight: 500;
-				border: none;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			}
-
-			.role-admin {
-				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-				color: white;
-				box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-			}
-
-			.role-employee {
-				background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-				color: white;
-				box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-			}
-
-			.role-admin svg,
-			.role-employee svg {
-				stroke: white;
-			}
-
-			.btn-logout {
-				padding: 0.5rem 1.25rem;
-				color: #ffffff;
-				background: #dc2626;
-				border: none;
-				border-radius: 0.5rem;
-				font-size: 0.875rem;
-				font-weight: 500;
-				transition: all 0.2s ease;
-			}
-
-			.btn-logout:hover {
-				background: #b91c1c;
-				transform: translateY(-1px);
-			}
-
-			.filters-section {
-				background: var(--primary-bg);
-				border-radius: 1rem;
-				padding: 1.5rem;
-				margin-bottom: 2.5rem;
-				border: 1px solid var(--border-color);
-			}
-
-			.filters-title {
-				font-size: 0.875rem;
-				font-weight: 600;
-				color: var(--text-secondary);
-				margin-bottom: 1rem;
-				text-transform: uppercase;
-				letter-spacing: 0.05em;
-			}
-
-			.form-select {
-				border: 1px solid var(--border-color);
-				border-radius: 0.5rem;
-				padding: 0.625rem 1rem;
-				font-size: 0.925rem;
-				color: var(--text-primary);
-				background-color: var(--primary-bg);
-			}
-
-			.form-select:focus {
-				border-color: var(--accent-color);
-				box-shadow: 0 0 0 1px var(--accent-color);
-			}
-
-			.btn-filter {
-				background-color: var(--accent-color);
-				border: none;
-				padding: 0.625rem 1.25rem;
-				border-radius: 0.5rem;
-				font-weight: 500;
-				transition: all 0.2s ease;
-			}
-
-			.btn-filter:hover {
-				opacity: 0.9;
-				transform: translateY(-1px);
-			}
-
-			.btn-addInstitute {
-				background-color: #22c55e;
-				color: white;
-				border: none;
-				padding: 0.625rem 1.25rem;
-				border-radius: 0.5rem;
-				font-weight: 500;
-				transition: all 0.2s ease;
-			}
-
-			.btn-addInstitute:hover {
-				background-color: #16a34a;
-				color: white;
-    			transform: translateY(-1px);
-			}
-
-			.institutes-grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-				gap: 1.5rem;
-			}
-
-			.institute-card {
-				background: var(--primary-bg);
-				border: 1px solid var(--border-color);
-				border-radius: 1rem;
-				padding: 1.5rem;
-				transition: all 0.2s ease;
-				position: relative;
-				cursor: pointer;
-			}
-
-			.institute-card:hover {
-				transform: translateY(-2px);
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-				border-color: var(--accent-color);
-			}
-
-			.institute-name {
-				font-size: 1.125rem;
-				font-weight: 600;
-				color: var(--text-primary);
-				margin-bottom: 1rem;
-			}
-
-			.institute-detail {
-				font-size: 0.925rem;
-				color: var(--text-secondary);
-				margin-bottom: 0.75rem;
-				display: flex;
-				align-items: center;
-				gap: 0.5rem;
-			}
-
-			.institute-detail svg {
-				width: 1rem;
-				height: 1rem;
-				flex-shrink: 0;
-			}
-
-			.section-heading {
-				font-size: 1.5rem;
-				font-weight: 600;
-				margin-bottom: 1.5rem;
-				color: var(--text-primary);
-			}
-
-			.revenue-card {
-				position: absolute;
-				top: 2rem;
-				right: 1.5rem;
-				background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-				color: white;
-				padding: 1.5rem;
-				border-radius: 1rem;
-				box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
-				min-width: 200px;
-			}
-
-			.revenue-amount {
-				font-size: 1.75rem;
-				font-weight: 600;
-				margin: 0.5rem 0;
-			}
-
-			.revenue-label {
-				font-size: 0.875rem;
-				opacity: 0.9;
-				margin: 0;
-			}
-
-			@media (max-width: 768px) {
-				.main-container {
-					padding: 1rem;
-				}
-
-				.welcome-title {
-					font-size: 1.75rem;
-				}
-
-				.institutes-grid {
-					grid-template-columns: 1fr;
-				}
-			}
-			.modal-content {
-				border-radius: 1rem;
-				border: none;
-				box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-			}
-
-			.modal-header {
-				border-bottom: 1px solid var(--border-color);
-				padding: 1.5rem;
-			}
-
-			.modal-footer {
-				border-top: 1px solid var(--border-color);
-				padding: 1.5rem;
-			}
-
-			.modal-body {
-				padding: 1.5rem;
-			}
-
-			.form-label {
-				font-weight: 500;
-				color: var(--text-primary);
-				margin-bottom: 0.5rem;
-			}
-
-			.form-control {
-				border: 1px solid var(--border-color);
-				border-radius: 0.5rem;
-				padding: 0.625rem 1rem;
-				font-size: 0.925rem;
-				color: var(--text-primary);
-			}
-
-			.form-control:focus {
-				border-color: var(--accent-color);
-				box-shadow: 0 0 0 1px var(--accent-color);
-			}
-
-			.empty-state {
-				background: var(--primary-bg);
-				border: 1px solid var(--border-color);
-				border-radius: 1rem;
-				padding: 2rem;
-			}
-
-			.empty-state svg {
-				color: var(--text-secondary);
-			}
-
-			.empty-state h3 {
-				color: var(--text-secondary);
-				font-weight: 500;
-			}
-
-			.empty-state .btn-addInstitute {
-				padding: 0.75rem 1.5rem;
-			}
-		</style>
 	</head>
 	<body>
 		<nav class="navbar sticky-top">
@@ -376,15 +72,6 @@
 					<% } %> <%= isAdmin ? 'Amministratore' : 'Impiegato' %>
 				</span>
 			</header>
-
-			<div class="filters-section mb-4">
-				<div class="d-flex align-items-center">
-					<div>
-						<h3 class="filters-title mb-2">Ricavi Totali</h3>
-						<h4 class="revenue-amount" id="totaleRicavi">€ 0.00</h4>
-					</div>
-				</div>
-			</div>
 
 			<h2 class="section-heading mb-4">I tuoi istituti</h2>
 
@@ -511,7 +198,7 @@
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48" class="mb-3 text-secondary mx-auto d-block">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
 					</svg>
-					<h3 class="h5 mb-3 text-secondary">Nessun istituto disponibile</h3>
+					<h3 class="h5 mb-3">Nessun istituto disponibile</h3>
 					<% if (user.roles.includes('impiegato')) { %>
 						<p class="text-muted">Contatta un amministratore per aggiungere nuovi istituti.</p>
 					<% } %>
@@ -606,22 +293,6 @@
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-		<script>
-		async function fetchRicaviTotali() {
-			try {
-				const response = await fetch('/istituti/ricavi/totale');
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				const data = await response.json();
-				document.getElementById('totaleRicavi').textContent = `€ ${data.toFixed(2)}`;
-			} catch (error) {
-				console.error('Errore nel recupero dei ricavi:', error);
-				document.getElementById('totaleRicavi').textContent = '€ 0.00';
-			}
-		}
-
-		document.addEventListener('DOMContentLoaded', fetchRicaviTotali);
-		</script>
+		<script src="/js/istituti.js"></script>
 	</body>
 </html>

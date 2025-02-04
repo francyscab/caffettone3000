@@ -186,6 +186,7 @@ function showAlert(message, type = 'success') {
     setTimeout(() => {
         const bsAlert = new bootstrap.Alert(alertDiv);
         bsAlert.close();
+        location.reload();
     }, 3000);
 }
 
@@ -511,17 +512,79 @@ function updateButtonsVisibility(faults) {
     }
 }
 
+let currentFaults = []; // Variabile globale per memorizzare i guasti
+
 function updateFaultsTable(faults) {
-    console.log(faults);
+    currentFaults = faults; // Memorizza i guasti
     const tableBody = document.getElementById("faultsTableBody");
     if (!tableBody) return;
 
-    if (faults.length === 0) {
+    const activeFilter = document.querySelector('.btn-group [data-filter].active')?.dataset.filter || 'tutti';
+    displayFilteredFaults(activeFilter);
+
+    // Aggiungi event listener ai pulsanti di filtro se non già presenti
+    setupFilterButtons();
+}
+
+function setupFilterButtons() {
+    // Rimuovi eventuali listener esistenti
+    const filterButtons = document.querySelectorAll('.btn-group [data-filter]');
+    filterButtons.forEach(button => {
+        button.removeEventListener('click', handleFilterClick);
+        button.addEventListener('click', handleFilterClick);
+    });
+}
+
+function handleFilterClick(event) {
+    // Rimuovi la classe active da tutti i pulsanti
+    document.querySelectorAll('.btn-group [data-filter]').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Aggiungi la classe active al pulsante cliccato
+    event.target.classList.add('active');
+
+    // Applica il filtro
+    displayFilteredFaults(event.target.dataset.filter);
+}
+
+function displayFilteredFaults(filterType) {
+    const tableBody = document.getElementById("faultsTableBody");
+    const tableContainer = tableBody.closest('.table-responsive');
+    
+    if (!tableBody) return;
+
+    if (currentFaults.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Nessun guasto registrato</td></tr>';
         return;
     }
 
-    const sortedFaults = faults.sort((a, b) => new Date(b.dataSegnalazione) - new Date(a.dataSegnalazione));
+    // Filtra i guasti in base al tipo di filtro
+    let filteredFaults = currentFaults;
+    if (filterType === 'in-corso') {
+        filteredFaults = currentFaults.filter(fault => !fault.risolto);
+    } else if (filterType === 'risolti') {
+        filteredFaults = currentFaults.filter(fault => fault.risolto);
+    }
+
+    // Ordina i guasti per data
+    const sortedFaults = filteredFaults.sort((a, b) => 
+        new Date(b.dataSegnalazione) - new Date(a.dataSegnalazione)
+    );
+
+    // Imposta altezza fissa se ci sono più di 5 guasti
+    if (sortedFaults.length > 5) {
+        tableContainer.style.maxHeight = '400px';
+        tableContainer.style.overflowY = 'auto';
+    } else {
+        tableContainer.style.maxHeight = 'none';
+        tableContainer.style.overflowY = 'visible';
+    }
+
+    if (sortedFaults.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" class="text-center">Nessun guasto ${filterType === 'risolti' ? 'risolto' : 'in corso'}</td></tr>`;
+        return;
+    }
 
     tableBody.innerHTML = sortedFaults.map(fault => `
         <tr class="${fault.risolto ? 'table-success' : 'table-warning'}">

@@ -6,22 +6,28 @@ router.get('/dashboard', async (req, res) => {
     try {
         const axiosInstance = createAuthenticatedAxiosInstance(req);
         
-        const [ricaviTotali, macchinette, transazioni] = await Promise.all([
-            axiosInstance.get(`${process.env.API_URL}/ricavi/totale`),
+        const [ricaviResponse, macchinette, transazioni] = await Promise.all([
+            axiosInstance.get(`${process.env.API_URL}/ricavi`),
             axiosInstance.get(`${process.env.API_URL}/macchinette`),
             axiosInstance.get(`${process.env.API_URL}/transazioni`)
         ]);
-        console.log(macchinette.data)
+
+    
+        const ricaviTotali = ricaviResponse.data.reduce((acc, ricavo) => 
+            acc + parseFloat(ricavo.somma_ricavo), 0);
+
         res.render('dashboard', {
             user: req.user,
-            ricaviTotali: ricaviTotali.data,
+            ricaviTotali: ricaviTotali,
+            ricavi: ricaviResponse.data,
             macchinette: macchinette.data,
             transazioni: transazioni.data
         });
     } catch (error) {
         console.error('Errore nel caricamento della dashboard:', error);
         res.status(500).render('error', { 
-            message: 'Si è verificato un errore durante il caricamento della dashboard. Riprova più tardi.'
+            message: 'Errore nel caricamento della dashboard',
+            error: error
         });
     }
 });
