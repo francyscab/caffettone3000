@@ -19,7 +19,7 @@
                             Errore
                         </h3>
                         <p class="card-text text-muted mb-4">
-                            <%= message || 'Si è verificato un errore imprevisto' %>
+                            <%= error && error.message || 'Si è verificato un errore imprevisto' %>
                         </p>
                         <div class="d-flex justify-content-between align-items-center">
                             <a href="/istituti" class="btn btn-primary">

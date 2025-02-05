@@ -3,13 +3,16 @@ async function fetchRicaviMacchinetta(macchinaId, istitutoId) {
         const response = await fetch(
             `/macchinette/istituto/${istitutoId}/macchinetta/ricavi/${macchinaId}`
         );
+        
         if (response.status === 404) {
             document.getElementById("totaleRicavi").textContent = "€ 0.00";
             return;
         }
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
         const data = await response.json();
         document.getElementById("totaleRicavi").textContent = `€ ${data.toFixed(2)}`;
     } catch (error) {
@@ -23,6 +26,7 @@ async function fetchStoricoRicavi(macchinaId, istitutoId) {
         const response = await fetch(
             `/macchinette/istituto/${istitutoId}/macchinetta/storico-ricavi/${macchinaId}`
         );
+        
         let ricavi = [];
 
         if (response.status === 404) {

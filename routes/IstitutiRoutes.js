@@ -93,7 +93,7 @@ router.post('/:id/macchinette', (req, res) => {
         
             if (error.response) {
                 const messaggioErrore = error.response.data.error;
-                res.render('error', { error: messaggioErrore });
+                res.render('error', { error: { message: messaggioErrore } });
             } else {
                 res.redirect(`/istituti/${req.params.id}/macchinette?error=Errore di connessione`);
             }
@@ -122,7 +122,6 @@ router.post('/addistituto', (req, res) => {
             res.redirect('/istituti');
         })
         .catch(error => {
-            console.error('Errore:', error);
             res.status(500).json({ error: 'Errore nel salvataggio dell\'istituto' });
         });
 

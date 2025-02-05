@@ -78,10 +78,18 @@ router.post('/:idIstituto/macchinette/:idMacchinetta/delete', async (req, res) =
     } catch (error) {
         console.error('Errore nell\'eliminazione della macchinetta:', error);
         if (error.response) {
-            const messaggioErrore = error.response.data.error;
-            res.render('error', { error: messaggioErrore });
+
+            res.render('error', { 
+                error: { 
+                    message: error.response.data.error 
+                }
+            });
         } else {
-            res.render('error', { error: { message: 'Errore di connessione al server' } });
+            res.render('error', { 
+                error: { 
+                    message: 'Errore di connessione al server' 
+                }
+            });
         }
     }
 });
