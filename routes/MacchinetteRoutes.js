@@ -65,7 +65,11 @@ router.get('/istituto/:idIstituto/macchinetta/storico-ricavi/:idMacchinetta', as
         res.json(response.data);
     } catch (error) {
         console.error('Errore nel recupero dello storico ricavi:', error);
-        res.status(500).json({ error: 'Errore nel recupero dello storico ricavi' });
+        if (error.response && error.response.status === 404) {
+            res.status(404).json({ error: error.response.data.error || 'Nessun dato disponibile' });
+        } else {
+            res.status(500).json({ error: 'Errore nel recupero dello storico ricavi' });
+        }
     }
 });
 

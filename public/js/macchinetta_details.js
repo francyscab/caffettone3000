@@ -27,19 +27,22 @@ async function fetchStoricoRicavi(macchinaId, istitutoId) {
             `/macchinette/istituto/${istitutoId}/macchinetta/storico-ricavi/${macchinaId}`
         );
         
-        let ricavi = [];
-
         if (response.status === 404) {
-            ricavi = [];
-        } else {
-            ricavi = await response.json();
+            const errorData = await response.json();
+            handleRicaviError(errorData.error || 'Nessun dato disponibile');
+            return;
         }
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const ricavi = await response.json();
         updateRicaviTable(ricavi);
         updateRicaviChart(ricavi);
     } catch (error) {
         console.error("Errore nel recupero dello storico ricavi:", error);
-        handleRicaviError();
+        handleRicaviError("Errore nel recupero dei dati");
     }
 }
 
@@ -458,9 +461,9 @@ function formatConsumableName(name) {
 }
 
 // Funzioni di utility per la gestione degli errori
-function handleRicaviError() {
+function handleRicaviError(message) {
     document.getElementById("ricaviTableBody").innerHTML = 
-        '<tr><td colspan="3" class="text-center text-danger">Errore nel caricamento dei dati</td></tr>';
+        `<tr><td colspan="3" class="text-center text-danger">${message}</td></tr>`;
     
     const ctx = document.getElementById("ricaviChart").getContext("2d");
     createEmptyChart(ctx);
