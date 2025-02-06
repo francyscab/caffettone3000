@@ -42,13 +42,9 @@ router.get('/:id/macchinette', async (req, res) => {
         // Prima otteniamo i dati dell'istituto
         const istitutoRes = await axiosInstance.get(istitutoUrl);
 
-        console.log(req.user);
-
         try {
             // Se abbiamo l'istituto, otteniamo le macchinette
             const macchinetteRes = await axiosInstance.get(url);
-
-
 
             res.render('istituto_details', {
                 istituto: istitutoRes.data,
@@ -63,7 +59,8 @@ router.get('/:id/macchinette', async (req, res) => {
                 istituto: istitutoRes.data,
                 macchinette: [],
                 apiUrl: process.env.API_URL,
-                error: 'Errore nel caricamento delle macchinette'
+                error: 'Errore nel caricamento delle macchinette',
+                user: req.user
             });
         }
     } catch (error) {
@@ -73,7 +70,8 @@ router.get('/:id/macchinette', async (req, res) => {
             istituto: {},
             macchinette: [],
             apiUrl: process.env.API_URL,
-            error: 'Errore nel caricamento dei dati dell\'istituto'
+            error: 'Errore nel caricamento dei dati dell\'istituto',
+            user: req.user
         });
     }
 });

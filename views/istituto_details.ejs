@@ -3,114 +3,13 @@
 <head>
     <title>Dettagli Istituto - Caffettone 3000</title>
     <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/istituto_details.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #eaeaea;
-        }
-        .container {
-            margin-top: 40px;
-        }
-        h1 {
-            font-weight: 500;
-            color: #3f51b5;
-            margin-bottom: 30px;
-        }
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            background-color: #ffffff;
-            margin-bottom: 1rem;
-        }
-        .card.clickable {
-            transition: transform 0.2s ease-in-out;
-            cursor: pointer;
-        }
-        .card.clickable:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        .card-title {
-            display: flex;
-            align-items: center;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-        }
-        .card-text {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.75rem;
-            color: #666;
-        }
-        .material-icons {
-            vertical-align: middle;
-            font-size: 1.2rem;
-            margin-right: 0.5rem;
-        }
-        .back-button {
-            color: #3f51b5;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .back-button:hover {
-            color: #283593;
-        }
-        .badge {
-            padding: 0.5rem 0.8rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .row-cols-md-3 > * {
-            padding: 0.75rem;
-        }
-        h3 {
-            color: #3f51b5;
-            margin: 2rem 0 1rem;
-            font-weight: 500;
-        }
-        .d-flex.justify-content-between.align-items-center.mb-4 {
-            margin-top: 40px;
-        }
-        .empty-state {
-            background: var(--primary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 2rem;
-        }
-        .empty-state svg {
-            color: var(--text-secondary);
-        }
-        .empty-state h3 {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        .empty-state .btn-addInstitute {
-            padding: 0.75rem 1.5rem;
-        }
-        .info-card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            background-color: #ffffff;
-            margin-bottom: 1rem;
-            padding: 1.5rem;
-        }
-        .btn-danger {
-            transition: transform 0.2s ease;
-        }
-        .btn-danger:hover {
-            transform: translateY(-2px);
-        }
-    </style>
 </head>
 <body>
-<div class="container">
+<div class="container" id="istitutoContainer" data-id-istituto="<%= istituto.id_istituto %>">
     
         <a href="/istituti" class="back-button">
             <i class="material-icons">arrow_back</i> Torna agli Istituti
@@ -123,7 +22,7 @@
                     <i class="material-icons">school</i>
                     <%= istituto.nome %>
                 </h1>
-                <% if (user.roles.includes('amministratore')) { %>
+                <% if (typeof user !== 'undefined' && user && user.roles && user.roles.includes('amministratore')) { %>
                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteIstitutoModal">
                         <i class="material-icons">delete</i> Elimina Istituto
                     </button>
@@ -151,8 +50,8 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Macchinette Disponibili</h2>
-        <% if (user.roles.includes('amministratore')) { %>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuovaMacchinaModal">
+        <% if (typeof user !== 'undefined' && user && user.roles && user.roles.includes('amministratore')) { %>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuovaMacchinaModal">
                 <i class="material-icons">add_circle</i> Aggiungi Macchinetta
             </button>
         <% } %>
@@ -178,28 +77,16 @@
                         <div class="col">
                             <a href="/macchinette/<%= istituto.id_istituto %>/macchinetta/<%= macchinetta.id_macchinetta %>" 
                                class="text-decoration-none">
-                                <div class="card h-100 clickable">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <i class="material-icons">local_cafe</i>
-                                            <span>Macchinetta <%= macchinetta.id_macchinetta %></span>
-                                        </h5>
-                                        <p class="card-text">
-                                            <i class="material-icons">info</i>
-                                            <span>Stato: 
-                                                <span class="badge ms-1 <%= macchinetta.online ? 'bg-success' : 'bg-danger' %>">
-                                                    <%= macchinetta.online ? 'ONLINE' : 'OFFLINE' %>
-                                                </span>
-                                            </span>
-                                        </p>
-                                        <p class="card-text">
-                                            <i class="material-icons">event</i>
-                                            <span>Ultima Manutenzione: 
-                                                <%= macchinetta.data_ultima_manutenzione ? 
-                                                    new Date(macchinetta.data_ultima_manutenzione).toLocaleDateString() : 
-                                                    'mai' %>
-                                            </span>
-                                        </p>
+                                <div class="card h-100">
+                                    <h5 class="card-title">
+                                        <i class="material-icons">local_cafe</i>
+                                        <span>Macchinetta <%= macchinetta.id_macchinetta %></span>
+                                    </h5>
+                                    <div class="status-indicator">
+                                        <div class="status-dot <%= macchinetta.online ? 'online' : 'offline' %>"></div>
+                                        <span class="badge <%= macchinetta.online ? 'bg-success' : 'bg-danger' %>">
+                                            <%= macchinetta.online ? 'ONLINE' : 'OFFLINE' %>
+                                        </span>
                                     </div>
                                 </div>
                             </a>
@@ -260,7 +147,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                <button type="button" class="btn btn-danger" onclick="deleteIstituto()">
+                <button type="button" class="btn btn-danger" onclick="deleteIstituto('<%= istituto.id_istituto %>')">
                     <i class="material-icons">delete</i> Elimina
                 </button>
             </div>
@@ -287,52 +174,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-async function fetchRicaviTotali() {
-    try {
-        const response = await fetch(`/istituti/<%= istituto.id_istituto %>/ricavi`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        const totale = data || 0;
-        
-        document.getElementById('totaleRicavi').textContent = `${totale.toFixed(2)}`;
-    } catch (error) {
-        console.error('Errore nel recupero dei ricavi:', error);
-        document.getElementById('totaleRicavi').textContent = '0.00';
-    }
-}
-
-document.addEventListener('DOMContentLoaded', fetchRicaviTotali);
-
-async function deleteIstituto() {
-    try {
-        const response = await fetch('/istituti/<%= istituto.id_istituto %>/delete', {
-            method: 'DELETE'
-        });
-
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.error || 'Errore durante l\'eliminazione');
-        }
-
-        window.location.href = '/istituti';
-    } catch (error) {
-        console.error('Errore durante l\'eliminazione:', error);
-        
-        // Chiudi il modal di conferma
-        const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteIstitutoModal'));
-        deleteModal.hide();
-        
-        // Mostra il modal di errore
-        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-        document.getElementById('errorModalBody').textContent = error.message;
-        errorModal.show();
-    }
-}
-</script>
+<script src="/js/istituto_details.js"></script>
 </body>
 </html>
