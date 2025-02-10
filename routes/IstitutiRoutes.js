@@ -85,15 +85,17 @@ router.post('/:id/macchinette', (req, res) => {
 
     axiosInstance.post(url.toString())
         .then(() => {
-            res.redirect(`/istituti/${req.params.id}/macchinette`);
+            res.status(200).json({ message: 'Macchinetta aggiunta con successo' });
         })
         .catch(error => {
-        
             if (error.response) {
-                const messaggioErrore = error.response.data.error;
-                res.render('error', { error: { message: messaggioErrore } });
+                res.status(error.response.status).json({ 
+                    error: error.response.data.error || 'Errore durante l\'aggiunta della macchinetta'
+                });
             } else {
-                res.redirect(`/istituti/${req.params.id}/macchinette?error=Errore di connessione`);
+                res.status(500).json({ 
+                    error: 'Errore di connessione al server'
+                });
             }
         });
 });

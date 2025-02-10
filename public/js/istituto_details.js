@@ -41,6 +41,51 @@ async function deleteIstituto(idIstituto) {
     }
 }
 
+document.getElementById('nuovaMacchinaForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    const idIstituto = document.getElementById('istitutoContainer').dataset.idIstituto;
+    const formData = new FormData(event.target);
+    
+    try {
+        const response = await fetch(`/istituti/${idIstituto}/macchinette`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_macchinetta: formData.get('id_macchinetta'),
+                piano: formData.get('piano')
+            })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Errore durante l\'aggiunta della macchinetta');
+        }
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById('nuovaMacchinaModal'));
+        modal.hide();
+
+        // Ricarica la pagina per mostrare la nuova macchinetta
+        window.location.reload();
+
+    } catch (error) {
+        // Crea e mostra l'alert di errore
+        const alertHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${error.message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        
+        // Inserisci l'alert all'inizio del form
+        const modalBody = document.querySelector('#nuovaMacchinaModal .modal-body');
+        modalBody.insertAdjacentHTML('afterbegin', alertHtml);
+    }
+});
+
 // Inizializzazione quando il DOM è caricato
 document.addEventListener('DOMContentLoaded', () => {
     // Recupera l'ID dell'istituto dal data attribute
