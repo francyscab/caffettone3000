@@ -112,6 +112,14 @@ h2, h3 {
     background-color: #f57c00;
 }
 
+.btn-danger .material-icons {
+    display: block;
+    line-height: 1;
+    position: relative;
+    top: 1px;
+    margin-right: 0;
+}
+
 /* Back Button */
 .back-button {
     color: #3f51b5;

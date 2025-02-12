@@ -3,10 +3,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateCharts(charts, { transazioni, ricavi });
     loadMachinesData();
 
-    document.getElementById('timeRange').addEventListener('change', async () => {
-        updateCharts(charts, { transazioni, ricavi });
-    });
-    
     document.getElementById('chartType').addEventListener('change', async () => {
         updateCharts(charts, { transazioni, ricavi });
     });

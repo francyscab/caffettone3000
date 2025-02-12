@@ -117,14 +117,14 @@
                         </svg>
                     </div>
                 </div>
-                <% const avgSugar = transazioni.reduce((acc, trans) => acc + trans.sugarLevel, 0) / transazioni.length; %>
+                <% const avgSugar = transazioni.length ? transazioni.reduce((acc, trans) => acc + trans.sugarLevel, 0) / transazioni.length : 0; %>
                 <div class="stat-value"><%= avgSugar.toFixed(1) %>/5</div>
                 <div class="sugar-distribution">
                     <% 
                     const sugarLevels = [0,1,2,3,4,5];
                     const sugarDistribution = sugarLevels.map(level => ({
                         level,
-                        percentage: (transazioni.filter(t => t.sugarLevel === level).length / transazioni.length * 100).toFixed(1)
+                        percentage: transazioni.length ? (transazioni.filter(t => t.sugarLevel === level).length / transazioni.length * 100).toFixed(1) : 0
                     }));
                     %>
                     <% sugarDistribution.forEach(sugar => { %>
@@ -141,13 +141,6 @@
             <div class="chart-card">
                 <div class="chart-header">
                     <h3 class="chart-title">Andamento Transazioni</h3>
-                    <div class="chart-actions">
-                        <select id="timeRange" class="chart-select">
-                            <option value="week">Settimana</option>
-                            <option value="month">Mese</option>
-                            <option value="year">Anno</option>
-                        </select>
-                    </div>
                 </div>
                 <canvas id="transactionsChart"></canvas>
             </div>
@@ -155,13 +148,6 @@
             <div class="chart-card">
                 <div class="chart-header">
                     <h3 class="chart-title">Distribuzione Ricavi</h3>
-                    <div class="chart-actions">
-                        <select id="chartType" class="chart-select">
-                            <option value="daily">Giornaliero</option>
-                            <option value="monthly">Mensile</option>
-                            <option value="yearly">Annuale</option>
-                        </select>
-                    </div>
                 </div>
                 <canvas id="revenueChart"></canvas>
             </div>
