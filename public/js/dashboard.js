@@ -1,13 +1,18 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const charts = initializeCharts();
     updateCharts(charts, { transazioni, ricavi });
+    
+    // Inizializza la tabella e i filtri
+    initSearch();
     loadMachinesData();
 
-    document.getElementById('chartType').addEventListener('change', async () => {
-        updateCharts(charts, { transazioni, ricavi });
-    });
-
-    initSearch();
+    // Event listener per il cambio di tipo di grafico
+    const chartTypeSelect = document.getElementById('chartType');
+    if (chartTypeSelect) {
+        chartTypeSelect.addEventListener('change', () => {
+            updateCharts(charts, { transazioni, ricavi });
+        });
+    }
 });
 
 function initializeCharts() {
@@ -168,31 +173,72 @@ function updateCharts(charts, data) {
     }
 }
 
+function initSearch() {
+    const searchInput = document.querySelector('.chart-select[type="text"]');
+    const filtroStato = document.getElementById('filtroStatoMacchinette');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#machinesTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+
+    if (filtroStato) {
+        filtroStato.addEventListener('change', () => {
+            loadMachinesData();
+        });
+    }
+}
+
 function loadMachinesData() {
     const tableBody = document.getElementById('machinesTableBody');
-    tableBody.innerHTML = macchinette.map(machine => `
+    if (!tableBody) return;
+
+    const filtroStato = document.getElementById('filtroStatoMacchinette');
+    const filtroValue = filtroStato ? filtroStato.value : 'tutti';
+    
+    const macchinetteFiltrate = macchinette.filter(machine => {
+        switch(filtroValue) {
+            case 'online':
+                return machine.online === true;
+            case 'offline':
+                return machine.online === false;
+            case 'guaste':
+                return machine.guasto === true;
+            default:
+                return true;
+        }
+    });
+
+    tableBody.innerHTML = macchinetteFiltrate.map(machine => `
         <tr>
             <td>${machine.id_macchinetta}</td>
             <td>${machine.id_istituto}</td>
             <td>${machine.piano}</td>
             <td>
                 <span class="status-badge ${machine.online ? 'status-online' : 'status-offline'}">
+                    <i class="material-icons">${machine.online ? 'check_circle' : 'error'}</i>
                     ${machine.online ? 'Online' : 'Offline'}
                 </span>
             </td>
+            <td>
+                ${machine.guasto ? 
+                    `<span class="status-badge status-guasto">
+                        <i class="material-icons">warning</i>
+                        Guasta
+                    </span>` : 
+                    `<span class="status-badge status-online">
+                        <i class="material-icons">check_circle</i>
+                        Funzionante
+                    </span>`
+                }
+            </td>
         </tr>
     `).join('');
-}
-
-function initSearch() {
-    const searchInput = document.querySelector('.chart-select[type="text"]');
-    searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll('#machinesTableBody tr');
-        
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        });
-    });
 } 

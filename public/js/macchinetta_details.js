@@ -518,7 +518,6 @@ function updateButtonsVisibility(faults) {
         richiediTecnicoBtn.style.display = "inline-flex";
     }
 }
-
 let currentFaults = []; // Variabile globale per memorizzare i guasti
 
 function updateFaultsTable(faults) {

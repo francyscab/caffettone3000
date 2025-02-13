@@ -30,11 +30,9 @@ async function deleteIstituto(idIstituto) {
     } catch (error) {
         console.error('Errore durante l\'eliminazione:', error);
         
-        // Chiudi il modal di conferma
         const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteIstitutoModal'));
         deleteModal.hide();
         
-        // Mostra il modal di errore
         const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
         document.getElementById('errorModalBody').textContent = error.message;
         errorModal.show();
@@ -68,11 +66,9 @@ document.getElementById('nuovaMacchinaForm').addEventListener('submit', async (e
         const modal = bootstrap.Modal.getInstance(document.getElementById('nuovaMacchinaModal'));
         modal.hide();
 
-        // Ricarica la pagina per mostrare la nuova macchinetta
         window.location.reload();
 
     } catch (error) {
-        // Crea e mostra l'alert di errore
         const alertHtml = `
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 ${error.message}
@@ -80,15 +76,41 @@ document.getElementById('nuovaMacchinaForm').addEventListener('submit', async (e
             </div>
         `;
         
-        // Inserisci l'alert all'inizio del form
         const modalBody = document.querySelector('#nuovaMacchinaModal .modal-body');
         modalBody.insertAdjacentHTML('afterbegin', alertHtml);
     }
 });
 
+function handleFiltroGuasti() {
+    const filtro = document.getElementById('filtroGuasti').value;
+    const cards = document.querySelectorAll('.macchinetta-card');
+    
+    cards.forEach(card => {
+        const isGuasto = card.dataset.guasto === 'true';
+        
+        switch(filtro) {
+            case 'guaste':
+                card.style.display = isGuasto ? '' : 'none';
+                break;
+            case 'funzionanti':
+                card.style.display = !isGuasto ? '' : 'none';
+                break;
+            default: 
+                card.style.display = '';
+        }
+    });
+
+    document.querySelectorAll('.piano-section').forEach(section => {
+        const hasVisibleMachines = Array.from(section.querySelectorAll('.macchinetta-card'))
+            .some(card => card.style.display !== 'none');
+        section.style.display = hasVisibleMachines ? '' : 'none';
+    });
+}
+
 // Inizializzazione quando il DOM è caricato
 document.addEventListener('DOMContentLoaded', () => {
-    // Recupera l'ID dell'istituto dal data attribute
     const idIstituto = document.getElementById('istitutoContainer').dataset.idIstituto;
     fetchRicaviTotali(idIstituto);
+
+    document.getElementById('filtroGuasti').addEventListener('change', handleFiltroGuasti);
 }); 

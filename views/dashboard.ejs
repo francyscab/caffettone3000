@@ -66,6 +66,26 @@
 
             <div class="stat-card">
                 <div class="stat-header">
+                    <span class="stat-title">Macchinette Guaste</span>
+                    <div class="stat-icon" style="background: var(--danger-color)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value"><%= macchinette.filter(m => m.guasto).length %></div>
+                <div class="stat-trend trend-negative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 5v14M5 12l7 7 7-7"/>
+                    </svg>
+                    <span><%= ((macchinette.filter(m => m.guasto).length / macchinette.length) * 100).toFixed(1) %>% del totale</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
                     <span class="stat-title">Ricavi Totali</span>
                     <div class="stat-icon" style="background: #f59e0b">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -157,6 +177,12 @@
             <div class="chart-header">
                 <h3 class="chart-title">Stato Macchinette</h3>
                 <div class="chart-actions">
+                    <select class="chart-select me-2" id="filtroStatoMacchinette">
+                        <option value="tutti">Tutti gli stati</option>
+                        <option value="online">Solo Online</option>
+                        <option value="offline">Solo Offline</option>
+                        <option value="guaste">Solo Guaste</option>
+                    </select>
                     <input type="text" placeholder="Cerca macchinetta..." class="chart-select">
                 </div>
             </div>
@@ -167,6 +193,7 @@
                         <th>Istituto</th>
                         <th>Piano</th>
                         <th>Stato</th>
+                        <th>Condizione</th>
                     </tr>
                 </thead>
                 <tbody id="machinesTableBody">
@@ -186,4 +213,5 @@
     </script>
     <script src="/js/dashboard.js"></script>
 </body>
+</html> 
 </html> 

@@ -50,11 +50,18 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Macchinette Disponibili</h2>
-        <% if (typeof user !== 'undefined' && user && user.roles && user.roles.includes('amministratore')) { %>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuovaMacchinaModal">
-                <i class="material-icons">add_circle</i> Aggiungi Macchinetta
-            </button>
-        <% } %>
+        <div class="d-flex gap-3 align-items-center">
+            <select id="filtroGuasti" class="form-select">
+                <option value="tutti">Tutte le macchinette</option>
+                <option value="guaste">Solo guaste</option>
+                <option value="funzionanti">Solo funzionanti</option>
+            </select>
+            <% if (typeof user !== 'undefined' && user && user.roles && user.roles.includes('amministratore')) { %>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuovaMacchinaModal">
+                    <i class="material-icons">add_circle</i> Aggiungi Macchinetta
+                </button>
+            <% } %>
+        </div>
     </div>
 
     <% if (macchinette && macchinette.length > 0) { %>
@@ -70,23 +77,29 @@
         %>
 
         <% Object.entries(macchinettePerPiano).sort((a, b) => a[0].localeCompare(b[0])).forEach(([piano, macchinettePiano]) => { %>
-            <div class="mb-4">
+            <div class="mb-4 piano-section">
                 <h3 class="mb-3">Piano <%= piano %></h3>
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     <% macchinettePiano.forEach(function(macchinetta) { %>
-                        <div class="col">
+                        <div class="col macchinetta-card" data-guasto="<%= macchinetta.guasto %>">
                             <a href="/macchinette/<%= istituto.id_istituto %>/macchinetta/<%= macchinetta.id_macchinetta %>" 
                                class="text-decoration-none">
                                 <div class="card h-100">
                                     <h5 class="card-title">
                                         <i class="material-icons">local_cafe</i>
                                         <span>Macchinetta <%= macchinetta.id_macchinetta %></span>
+                                        <% if (macchinetta.guasto) { %>
+                                            <i class="material-icons text-danger ms-auto" title="Macchinetta guasta">error</i>
+                                        <% } %>
                                     </h5>
                                     <div class="status-indicator">
                                         <div class="status-dot <%= macchinetta.online ? 'online' : 'offline' %>"></div>
                                         <span class="badge <%= macchinetta.online ? 'bg-success' : 'bg-danger' %>">
                                             <%= macchinetta.online ? 'ONLINE' : 'OFFLINE' %>
                                         </span>
+                                        <% if (macchinetta.guasto) { %>
+                                            <span class="badge bg-danger ms-2">GUASTA</span>
+                                        <% } %>
                                     </div>
                                 </div>
                             </a>

@@ -7,7 +7,6 @@ router.get('/login', keycloak.protect(), (req, res) => {
     res.redirect('/istituti');
 });
 
-// Logout route
 router.get('/logout', (req, res) => {
     
     const logoutUrl = `${keycloak.config.authServerUrl}/realms/${keycloak.config.realm}/protocol/openid-connect/logout`;

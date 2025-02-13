@@ -39,11 +39,10 @@ router.get('/:id/macchinette', async (req, res) => {
     const axiosInstance = createAuthenticatedAxiosInstance(req);
 
     try {
-        // Prima otteniamo i dati dell'istituto
+
         const istitutoRes = await axiosInstance.get(istitutoUrl);
 
         try {
-            // Se abbiamo l'istituto, otteniamo le macchinette
             const macchinetteRes = await axiosInstance.get(url);
 
             res.render('istituto_details', {
@@ -54,7 +53,6 @@ router.get('/:id/macchinette', async (req, res) => {
             });
 
         } catch (error) {
-            // Errore nel caricamento delle macchinette
             res.render('istituto_details', {
                 istituto: istitutoRes.data,
                 macchinette: [],
@@ -64,7 +62,6 @@ router.get('/:id/macchinette', async (req, res) => {
             });
         }
     } catch (error) {
-        // Errore nel caricamento dell'istituto
         console.error('Errore:', error);
         res.render('istituto_details', {
             istituto: {},

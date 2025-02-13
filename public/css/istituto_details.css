@@ -129,6 +129,24 @@ h2 {
     -webkit-text-fill-color: transparent;
 }
 
+.card-title .material-icons.text-danger {
+    font-size: 1.5rem;
+    margin-left: auto;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .card-text {
     font-size: 0.95rem;
     color: var(--text-secondary);
@@ -413,4 +431,34 @@ h3 {
 
 .btn-danger:hover {
     transform: translateY(-2px);
+}
+
+#filtroGuasti {
+    min-width: 200px;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    background-color: var(--card-background);
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+#filtroGuasti:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.macchinetta-card[data-guasto="true"] .card {
+    border-color: var(--danger-color);
+}
+
+.macchinetta-card[data-guasto="true"] .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(220, 53, 69, 0.2);
+}
+
+.macchinetta-card[data-guasto="true"] .card:before {
+    background: linear-gradient(90deg, var(--danger-color), #ff4d4d);
+    opacity: 1;
 } 

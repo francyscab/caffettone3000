@@ -40,6 +40,7 @@
 							>
 								<%= macchinetta.online ? 'ONLINE' : 'OFFLINE' %>
 							</span>
+							<% if (user.roles.includes('amministratore')) { %>
 							<button
 								type="button"
 								class="btn btn-warning me-2"
@@ -53,6 +54,7 @@
 								>
 								Richiedi Tecnico
 							</button>
+							<% } %>
 							<% if (user.roles.includes('amministratore')) { %>
 							<button
 								type="button"
@@ -77,18 +79,17 @@
 											<h5 class="card-title text-white">Ricavi Totali</h5>
 											<h2 class="mb-0 text-white" id="totaleRicavi">€ 0.00</h2>
 										</div>
-										<% if (user.roles.includes('amministratore')) { %>
+										
 										<button
 											type="button"
 											class="btn btn-light"
-											style="display: none;"
 											onclick="svuotaCassa('<%= macchinetta.id_macchinetta %>', '<%= istituto.id_istituto %>')"
 											id="svuotaCassaBtn"
 										>
-											<i class="material-icons">payments</i>
+											<i class="material-icons" style="vertical-align: middle;">payments</i>
 											Svuota Cassa
 										</button>
-										<% } %>
+									
 									</div>
 								</div>
 							</div>
