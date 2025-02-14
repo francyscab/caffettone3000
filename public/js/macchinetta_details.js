@@ -249,10 +249,8 @@ function updateTransazioniTable(transazioni) {
         return;
     }
 
-    // Ordina le transazioni per timestamp decrescente
     const transazioniOrdinate = transazioni.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-    // Imposta altezza fissa se ci sono più di 5 transazioni
     if (transazioni.length > 5) {
         tableContainer.style.maxHeight = '400px';
         tableContainer.style.overflowY = 'auto';
@@ -460,7 +458,6 @@ function formatConsumableName(name) {
     return name.charAt(0) + name.slice(1).toLowerCase();
 }
 
-// Funzioni di utility per la gestione degli errori
 function handleRicaviError(message) {
     document.getElementById("ricaviTableBody").innerHTML = 
         `<tr><td colspan="3" class="text-center text-danger">${message}</td></tr>`;
@@ -491,49 +488,58 @@ async function fetchFaults(macchinaId, istitutoId) {
 }
 
 function updateButtonsVisibility(faults) {
+    console.log("Aggiornamento visibilità pulsanti");
+    updateSvuotaCassaButton(faults);
+    updateRichiediTecnicoButton(faults);
+}
+
+function updateSvuotaCassaButton(faults) {
     const svuotaCassaBtn = document.getElementById("svuotaCassaBtn");
+    if (!svuotaCassaBtn) return;
+
+    const activeGuasti = faults.filter(fault => !fault.risolto);
+    const hasCassaPiena = activeGuasti.some(fault => fault.tipoGuasto === "CASSA_PIENA");
+    
+    console.log("Ha cassa piena:", hasCassaPiena);
+    
+    if (hasCassaPiena) {
+        svuotaCassaBtn.style.display = "inline-flex";
+        console.log("Pulsante svuota cassa mostrato");
+    } else {
+        svuotaCassaBtn.style.display = "none"; 
+        console.log("Pulsante svuota cassa nascosto");
+    }
+}
+
+function updateRichiediTecnicoButton(faults) {
     const richiediTecnicoBtn = document.getElementById("richiediTecnicoBtn");
+    if (!richiediTecnicoBtn) return;
 
-    if (!svuotaCassaBtn || !richiediTecnicoBtn) return;
-
-    // Nascondi inizialmente i pulsanti
-    svuotaCassaBtn.style.display = "none";
     richiediTecnicoBtn.style.display = "none";
 
-    // Verifica la presenza di guasti attivi (non risolti)
     const activeGuasti = faults.filter(fault => !fault.risolto);
-
-    // Controlla i tipi di guasto
-    const hasCassaPiena = activeGuasti.some(fault => fault.tipoGuasto === "CASSA_PIENA");
     const hasGuastoGenerico = activeGuasti.some(fault => fault.tipoGuasto === "GUASTO_GENERICO");
     const hasConsumabileTerminato = activeGuasti.some(fault => fault.tipoGuasto === "CONSUMABILE_TERMINATO");
 
-    // Mostra il pulsante svuota cassa se c'è un guasto di tipo CASSA_PIENA
-    if (hasCassaPiena) {
-        svuotaCassaBtn.style.display = "inline-flex";
-    }
-
-    // Mostra il pulsante richiedi tecnico se c'è un guasto generico o consumabile terminato
-    if (hasGuastoGenerico || hasConsumabileTerminato) {
+    if ((hasGuastoGenerico || hasConsumabileTerminato) && document.body.dataset.userRole === 'amministratore') {
         richiediTecnicoBtn.style.display = "inline-flex";
     }
 }
-let currentFaults = []; // Variabile globale per memorizzare i guasti
+let currentFaults = []; 
 
 function updateFaultsTable(faults) {
-    currentFaults = faults; // Memorizza i guasti
+    currentFaults = faults; 
     const tableBody = document.getElementById("faultsTableBody");
     if (!tableBody) return;
 
     const activeFilter = document.querySelector('.btn-group [data-filter].active')?.dataset.filter || 'tutti';
     displayFilteredFaults(activeFilter);
 
-    // Aggiungi event listener ai pulsanti di filtro se non già presenti
+
     setupFilterButtons();
 }
 
 function setupFilterButtons() {
-    // Rimuovi eventuali listener esistenti
     const filterButtons = document.querySelectorAll('.btn-group [data-filter]');
     filterButtons.forEach(button => {
         button.removeEventListener('click', handleFilterClick);
@@ -542,15 +548,12 @@ function setupFilterButtons() {
 }
 
 function handleFilterClick(event) {
-    // Rimuovi la classe active da tutti i pulsanti
     document.querySelectorAll('.btn-group [data-filter]').forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // Aggiungi la classe active al pulsante cliccato
     event.target.classList.add('active');
 
-    // Applica il filtro
     displayFilteredFaults(event.target.dataset.filter);
 }
 
@@ -565,7 +568,6 @@ function displayFilteredFaults(filterType) {
         return;
     }
 
-    // Filtra i guasti in base al tipo di filtro
     let filteredFaults = currentFaults;
     if (filterType === 'in-corso') {
         filteredFaults = currentFaults.filter(fault => !fault.risolto);
@@ -573,12 +575,10 @@ function displayFilteredFaults(filterType) {
         filteredFaults = currentFaults.filter(fault => fault.risolto);
     }
 
-    // Ordina i guasti per data
     const sortedFaults = filteredFaults.sort((a, b) => 
         new Date(b.dataSegnalazione) - new Date(a.dataSegnalazione)
     );
 
-    // Imposta altezza fissa se ci sono più di 5 guasti
     if (sortedFaults.length > 5) {
         tableContainer.style.maxHeight = '400px';
         tableContainer.style.overflowY = 'auto';

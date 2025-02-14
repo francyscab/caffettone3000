@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { keycloak } = require('../config/keycloak_config');
 
-// Login route - reindirizza a /istituti dopo il login
 router.get('/login', keycloak.protect(), (req, res) => {
     res.redirect('/istituti');
 });

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Gestione hover sulle card degli istituti
     const instituteCards = document.querySelectorAll('.institute-card');
     instituteCards.forEach(card => {
         card.addEventListener('mouseenter', () => {
@@ -11,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Gestione del form di filtro
+    
     const filterForm = document.querySelector('form[action="/istituti"]');
     if (filterForm) {
         filterForm.addEventListener('submit', (e) => {
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Gestione del modal per nuovo istituto
     const newInstituteModal = document.getElementById('newInstituteModal');
     if (newInstituteModal) {
         const form = newInstituteModal.querySelector('form');

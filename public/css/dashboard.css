@@ -4,7 +4,6 @@
     min-height: 100vh;
 }
 
-/* Header Section */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -24,7 +23,6 @@
     font-size: 0.875rem;
 }
 
-/* Stats Grid */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

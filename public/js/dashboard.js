@@ -2,11 +2,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const charts = initializeCharts();
     updateCharts(charts, { transazioni, ricavi });
     
-    // Inizializza la tabella e i filtri
     initSearch();
     loadMachinesData();
 
-    // Event listener per il cambio di tipo di grafico
     const chartTypeSelect = document.getElementById('chartType');
     if (chartTypeSelect) {
         chartTypeSelect.addEventListener('change', () => {
@@ -16,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function initializeCharts() {
-    // Grafico Transazioni
     const transCtx = document.getElementById('transactionsChart').getContext('2d');
     const transChart = new Chart(transCtx, {
         type: 'bar',
@@ -59,7 +56,7 @@ function initializeCharts() {
         }
     });
 
-    // Grafico Ricavi
+    
     const revCtx = document.getElementById('revenueChart').getContext('2d');
     const revChart = new Chart(revCtx, {
         type: 'line',

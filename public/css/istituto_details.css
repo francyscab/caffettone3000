@@ -29,7 +29,6 @@ body {
     padding: 0 1rem;
 }
 
-/* Header e Titoli */
 h1 {
     font-size: 2rem;
     font-weight: 500;
@@ -44,14 +43,12 @@ h2 {
     margin-bottom: 1rem;
 }
 
-/* Navbar e Branding */
 .navbar-brand {
     font-size: 1.5rem;
     font-weight: 500;
     color: var(--primary-color);
 }
 
-/* Cards e Contenitori */
 .card {
     background: var(--primary-bg);
     border: 1px solid var(--border-color);
@@ -182,7 +179,6 @@ h2 {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
 }
 
-/* Status Indicator */
 .status-indicator {
     display: flex;
     align-items: center;
@@ -208,7 +204,6 @@ h2 {
     box-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
 }
 
-/* Info Card */
 .info-card {
     background: var(--primary-bg);
     border: 1px solid var(--border-color);
@@ -226,7 +221,6 @@ h2 {
     letter-spacing: -0.25px;
 }
 
-/* Bottoni */
 .btn {
     font-weight: 600;
     padding: 0.75rem 1.5rem;
@@ -261,7 +255,6 @@ h2 {
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
-/* Badge e Stati */
 .badge {
     padding: 0.5rem 0.75rem;
     font-weight: 500;
@@ -276,7 +269,6 @@ h2 {
     background-color: var(--danger-color) !important;
 }
 
-/* Icone e Testo */
 .material-icons {
     vertical-align: middle;
     font-size: 1.25rem;
@@ -287,7 +279,6 @@ h2 {
     color: var(--text-secondary) !important;
 }
 
-/* Link e Navigazione */
 .back-button {
     color: var(--primary-color);
     text-decoration: none;
@@ -301,7 +292,6 @@ h2 {
     color: #0a58ca;
 }
 
-/* Filtri e Ricerca */
 .filtri-container {
     background-color: var(--card-background);
     padding: 1rem;
@@ -310,7 +300,6 @@ h2 {
     box-shadow: 0 4px 12px var(--card-shadow);
 }
 
-/* Welcome Section */
 .welcome-section {
     text-align: center;
     margin-bottom: 2rem;
@@ -332,7 +321,6 @@ h2 {
     font-weight: 500;
 }
 
-/* Grid e Layout */
 .row {
     margin: 0 -0.75rem;
 }
@@ -341,7 +329,6 @@ h2 {
     padding: 0 0.75rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         margin: 1rem auto;
@@ -356,7 +343,6 @@ h2 {
     }
 }
 
-/* Modals */
 .modal-content {
     border-radius: 0.5rem;
     border: none;
@@ -372,7 +358,6 @@ h2 {
     padding: 1rem 1.5rem;
 }
 
-/* Forms */
 .form-control {
     border-radius: 0.375rem;
     border: 1px solid var(--border-color);

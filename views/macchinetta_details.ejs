@@ -17,7 +17,7 @@
 			rel="stylesheet"
 		/>
 	</head>
-	<body>
+	<body data-user-role="<%= user.roles.includes('amministratore') ? 'amministratore' : 'impiegato' %>">
 		<div class="container">
 			<a
 				href="/istituti/<%= istituto.id_istituto %>/macchinette"
@@ -44,8 +44,8 @@
 							<button
 								type="button"
 								class="btn btn-warning me-2"
-								id="richiediTecnicoBtn"
 								style="display: none;"
+								id="richiediTecnicoBtn"
 								onclick="richiediManutenzione('<%= macchinetta.id_macchinetta %>', '<%= istituto.id_istituto %>')"
 							>
 								<i
@@ -80,15 +80,19 @@
 											<h2 class="mb-0 text-white" id="totaleRicavi">€ 0.00</h2>
 										</div>
 										
+										<% if (user.roles.includes('amministratore') || user.roles.includes('impiegato')) { %>
+										
 										<button
 											type="button"
 											class="btn btn-light"
+											style="display: none;"
 											onclick="svuotaCassa('<%= macchinetta.id_macchinetta %>', '<%= istituto.id_istituto %>')"
 											id="svuotaCassaBtn"
 										>
 											<i class="material-icons" style="vertical-align: middle;">payments</i>
 											Svuota Cassa
 										</button>
+										<% } %>
 									
 									</div>
 								</div>

@@ -21,7 +21,6 @@
     background-color: #2980b9;
     border-color: #2980b9;
 }
-/* Scrollbar Customization */
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -41,7 +40,6 @@
     background: #283593;
 }
 
-/* For Firefox */
 * {
     scrollbar-width: thin;
     scrollbar-color: #3f51b5 #f1f1f1;

@@ -107,7 +107,6 @@ function handleFiltroGuasti() {
     });
 }
 
-// Inizializzazione quando il DOM è caricato
 document.addEventListener('DOMContentLoaded', () => {
     const idIstituto = document.getElementById('istitutoContainer').dataset.idIstituto;
     fetchRicaviTotali(idIstituto);
