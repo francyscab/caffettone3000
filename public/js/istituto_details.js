@@ -107,6 +107,34 @@ function handleFiltroGuasti() {
     });
 }
 
+function generateCoffeeVendingName() {
+    const prefixes = [
+        'Espresso', 'Cappuccino', 'Mocha', 'Latte', 'Java'
+    ];
+    
+    const suffixes = [
+        'Master', 'Wizard', 'Buddy', 'Hero', 'Star',
+        'Ninja', 'Chief', 'Boss', 'King', 'Queen'
+    ];
+    
+    const uniqueNumber = Math.floor(100 + Math.random() * 900);
+    
+    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+    
+    return `${prefix}${suffix}${uniqueNumber}`;
+}
+
+
+document.getElementById('generateIdBtn').addEventListener('click', async () => {
+    const idInput = document.getElementById('id_macchinetta');
+    const uuid= generateCoffeeVendingName();
+    idInput.value = uuid;
+
+
+});
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const idIstituto = document.getElementById('istitutoContainer').dataset.idIstituto;
     fetchRicaviTotali(idIstituto);

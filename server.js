@@ -33,7 +33,6 @@ app.use(session({
     store: memoryStore
 }));
 
-// Keycloak middleware
 app.use(keycloak.middleware());
 
 const authenticatedUserInfo= (req, res, next) => {
@@ -60,7 +59,6 @@ const authenticatedUserInfo= (req, res, next) => {
     
 }
 
-// Routes
 app.use('/istituti',keycloak.protect(), authenticatedUserInfo, istitutiRoutes);
 app.use('/auth', authRoutes);
 app.use('/macchinette', keycloak.protect(), authenticatedUserInfo, macchinetteRoutes);
